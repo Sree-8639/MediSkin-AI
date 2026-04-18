@@ -37,3 +37,6 @@ gunicorn>=21.2.0
 psycopg2-binary>=2.9.0  # PostgreSQL support for Render
 whitenoise>=6.6.0       # Static files serving in production
 dj-database-url>=2.1.0  # Database URL parsing for Render
+
+# Hugging Face Hub (model download at HF Spaces startup)
+huggingface_hub>=0.22.0

@@ -1,3 +1,14 @@
+---
+title: MediSkin AI
+emoji: 🩺
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+short_description: AI-powered skin disease diagnosis using ResNet50 deep learning
+---
+
 # 🧬 MediSkin AI — Automated Skin Disease Identification Platform
 
 <div align="center">
