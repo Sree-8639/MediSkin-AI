@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostics - MediSkin AI</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/diagnostics.css' %}">
+    <!-- Backend API URL injected by Django — read by config.js -->
+    <meta name="api-base-url" content="{{ API_BASE_URL }}">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="MediSkin AI" class="logo-image">
+                <span>MediSkin AI</span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
+                aria-controls="primaryNav" data-nav-toggle>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <nav class="nav-menu" id="primaryNav" data-nav-menu>
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'profile' %}" class="nav-link">Profile</a>
+                <button class="btn btn-outline btn-sm" id="logoutBtn">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="diagnostics-main">
+        <!-- Floating Medical Icons -->
+        <div class="floating-icon icon-1">🩹</div>
+        <div class="floating-icon icon-2">🏥</div>
+        <div class="floating-icon icon-3">🧬</div>
+        <div class="floating-icon icon-4">🧪</div>
+        <div class="floating-icon icon-5">💉</div>
+        <div class="floating-icon icon-6">🩺</div>
+        <div class="floating-icon icon-7">🔬</div>
+        <div class="floating-icon icon-8">💊</div>
+        <div class="floating-icon icon-9">⚕️</div>
+        <div class="floating-icon icon-10">🧼</div>
+        <div class="floating-icon icon-11">🌡️</div>
+        <div class="floating-icon icon-12">❤️</div>
+        <div class="floating-icon icon-13">🧬</div>
+        <div class="floating-icon icon-14">🔬</div>
+        <div class="floating-icon icon-15">🏥</div>
+
+        <div class="container">
+            <div class="page-header">
+                <h1>Skin Disease Diagnostics</h1>
+                <p>Upload an image for AI-powered analysis</p>
+            </div>
+
+            <!-- Upload and Results Grid -->
+            <div class="diagnostics-grid">
+                <!-- Upload Section -->
+                <div class="card upload-card">
+                    <h2 class="card-section-title">Upload Image</h2>
+
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                                </path>
+                            </svg>
+                            <p class="upload-text">Drag &amp; drop your image here</p>
+                            <p class="upload-subtext">or click to browse</p>
+                            <p class="upload-formats">JPG, PNG (Max 5MB)</p>
+                        </div>
+                        <img id="imagePreview" class="image-preview hidden" alt="Preview" src="">
+                        <input type="file" id="fileInput" accept="image/jpeg,image/png" hidden>
+                    </div>
+
+                    <div class="upload-actions">
+                        <button class="btn btn-outline btn-full" id="selectImageBtn">Select Image</button>
+                        <button class="btn btn-primary btn-full hidden" id="analyzeBtn">
+                            <span class="btn-text">Analyze Image</span>
+                            <span class="btn-loader hidden">
+                                <svg class="spinner" viewBox="0 0 24 24">
+                                    <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4" fill="none"></circle>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div class="alert alert-error hidden" id="uploadError">
+                        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span id="uploadErrorText"></span>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="card results-card">
+                    <h2 class="card-section-title">Prediction Results</h2>
+
+                    <div class="results-placeholder" id="resultsPlaceholder">
+                        <svg class="results-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
+                            </path>
+                        </svg>
+                        <p>Upload and analyze an image to see results</p>
+                    </div>
+
+                    <div class="results-content hidden" id="resultsContent">
+                        <div class="result-item">
+                            <label class="result-label" for="diseaseName">Detected Condition:</label>
+                            <h3 class="disease-name" id="diseaseName">-</h3>
+                        </div>
+
+                        <div class="result-item">
+                            <label class="result-label">Confidence Score:</label>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidenceFill"></div>
+                            </div>
+                            <span class="confidence-text" id="confidenceText">0%</span>
+                        </div>
+
+                        <!-- Top Differential Diagnoses Table -->
+                        <div class="result-item" id="topPredictionsContainer" style="display:none;">
+                            <label class="result-label">Top Differential Diagnoses:</label>
+                            <table class="diff-table" id="topPredictionsTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Condition</th>
+                                        <th>Category</th>
+                                        <th>Confidence</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topPredictionsBody"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="result-disclaimer">
+                            <svg class="disclaimer-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p>Please consult a dermatologist for professional diagnosis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hospital Recommendations -->
+            <div class="card hospital-card section-gap">
+                <h2 class="card-section-title">Recommended Dermatology Hospitals</h2>
+                <p class="card-subtitle">Select your location to view nearby specialized clinics</p>
+
+                <div class="location-form-grid">
+                    <div class="form-group">
+                        <label for="countrySelect" class="form-label">Country:</label>
+                        <select id="countrySelect" class="form-select" disabled>
+                            <option value="india" selected>India</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="stateSelect" class="form-label">State:</label>
+                        <select id="stateSelect" class="form-select">
+                            <option value="">Select State</option>
+                            <!-- States will be populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="districtSelect" class="form-label">District:</label>
+                        <select id="districtSelect" class="form-select" disabled>
+                            <option value="">Select District</option>
+                            <!-- Districts will be populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="townInput" class="form-label">Town/City:</label>
+                        <input type="text" id="townInput" class="form-input" placeholder="e.g. Bangalore">
+                    </div>
+                </div>
+
+                <div class="center-btn">
+                    <button type="button" id="viewRecommendationsBtn" class="btn btn-primary">View
+                        Recommendations</button>
+                </div>
+
+                <!-- Google Maps embed — shown after clicking View Recommendations -->
+                <div id="mapsEmbedContainer" class="maps-embed-container hidden">
+                    <div class="maps-embed-label">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:18px;height:18px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        Dermatology Clinics Near <span id="mapsEmbedLocation"></span>
+                    </div>
+                    <iframe id="mapsEmbedFrame" class="maps-embed-frame"
+                        frameborder="0" allowfullscreen
+                        referrerpolicy="no-referrer-when-downgrade"
+                        loading="lazy" src=""
+                        title="Nearby Dermatology Clinics Map">
+                    </iframe>
+                </div>
+
+                <div class="hospitals-grid" id="hospitalsGrid"
+                    data-placeholder-image="{% static 'images/hospital-placeholder.jpg' %}">
+                    <p class="hospitals-placeholder">Select your location and click "View Recommendations"</p>
+                </div>
+            </div>
+
+            <!-- Feedback Section -->
+            <div class="card feedback-card">
+                <h2 class="card-section-title">Feedback</h2>
+                <p class="card-subtitle">Help us improve our AI predictions</p>
+
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label class="form-label" for="feedbackAccuracy">Was this prediction accurate?</label>
+                        <div class="feedback-buttons">
+                            <button type="button" class="feedback-btn" data-value="yes">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
+                                    </path>
+                                </svg>
+                                Yes
+                            </button>
+                            <button type="button" class="feedback-btn" data-value="no">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5">
+                                    </path>
+                                </svg>
+                                No
+                            </button>
+                        </div>
+                        <input type="hidden" id="feedbackAccuracy" name="accuracy">
+                        <span class="form-error" id="accuracyError">Please select an option</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="feedbackComments" class="form-label">Additional Comments (Optional):</label>
+                        <textarea id="feedbackComments" name="comments" class="form-textarea"
+                            placeholder="Share your thoughts..."></textarea>
+                    </div>
+
+                    <div class="alert alert-success hidden" id="feedbackSuccess">
+                        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        <span>Thank you for your feedback!</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">Submit Feedback</button>
+                </form>
+            </div>
+
+            <div class="card report-details-container">
+                <div class="report-header">
+                    <svg class="report-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <h3>Report Details</h3>
+                </div>
+                <p class="report-description">Preview or download your diagnostic report after the analysis.</p>
+                <div class="report-actions">
+                    <button class="btn btn-outline" id="previewReportBtn" type="button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            style="width: 20px; height: 20px; margin-right: 8px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                            </path>
+                        </svg>
+                        Preview Report
+                    </button>
+                    <button class="btn btn-primary" id="downloadReportBtn" type="button">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            style="width: 20px; height: 20px; margin-right: 8px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <p class="footer-text">&copy; 2026 MediSkin AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- PDF Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script src="{% static 'js/config.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+    <script src="{% static 'js/diagnostics.js' %}?v=2"></script>
+</body>
+
+</html>

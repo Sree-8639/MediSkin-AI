@@ -1,0 +1,39 @@
+# MediSkin AI - Backend Dependencies
+
+# Django Framework
+Django>=5.0,<5.2
+
+# Environment variable management
+python-dotenv>=1.0.0
+python-decouple>=3.8
+
+# CORS support for frontend-backend communication
+django-cors-headers>=4.3.0
+
+# Image processing
+Pillow>=10.0.0
+
+# Google OAuth 2.0
+django-allauth>=0.61.0
+PyJWT>=2.8.0          # required by allauth Google provider (ID token verification)
+
+# ML / Deep Learning
+tensorflow>=2.15.0
+numpy>=1.24.0
+
+# HTTP requests (for any API calls)
+requests>=2.31.0
+
+# PDF generation (server-side reports)
+reportlab>=4.0.0
+
+# Timezone support
+pytz>=2023.3
+
+# Production WSGI server
+gunicorn>=21.2.0
+
+# Database drivers
+psycopg2-binary>=2.9.0  # PostgreSQL support for Render
+whitenoise>=6.6.0       # Static files serving in production
+dj-database-url>=2.1.0  # Database URL parsing for Render

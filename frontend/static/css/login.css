@@ -1,0 +1,639 @@
+/* Login Page - Dark 3D Theme */
+
+/* Login container specific dimensions */
+.login-main .container-sm {
+    max-width: 480px;
+}
+
+.login-card {
+    max-height: 400px;
+    padding: 1rem 1.5rem;
+    overflow: visible;
+}
+
+.login-main {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xl) 0;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Medical Themed Animated Background */
+.login-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 85% 80%, rgba(96, 165, 250, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.08) 0%, transparent 60%);
+    animation: medicalPulse 8s ease-in-out infinite;
+    z-index: -3;
+}
+
+@keyframes medicalPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.08);
+    }
+}
+
+/* Randomly positioned floating medical icons */
+.login-main::after {
+    content: '⚕️';
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    font-size: 4rem;
+    opacity: 0.2;
+    animation: float1 8s ease-in-out infinite;
+    z-index: -2;
+}
+
+.login-card::before {
+    content: '🧬';
+    position: fixed;
+    top: 20%;
+    right: 10%;
+    font-size: 3.5rem;
+    opacity: 0.18;
+    animation: float2 10s ease-in-out infinite;
+    z-index: -1;
+}
+
+.login-card::after {
+    content: '';
+    position: fixed;
+    bottom: 15%;
+    left: 8%;
+    font-size: 3rem;
+    opacity: 0.15;
+    animation: float3 12s ease-in-out infinite;
+    z-index: -1;
+}
+
+/* Individual float animations */
+@keyframes float1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(30px, -40px) rotate(90deg);
+    }
+
+    50% {
+        transform: translate(-20px, -80px) rotate(180deg);
+    }
+
+    75% {
+        transform: translate(-40px, -40px) rotate(270deg);
+    }
+}
+
+@keyframes float2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    33% {
+        transform: translate(-50px, 60px) rotate(120deg) scale(1.1);
+    }
+
+    66% {
+        transform: translate(40px, 40px) rotate(240deg) scale(0.9);
+    }
+}
+
+@keyframes float3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+
+    50% {
+        transform: translate(60px, -70px) rotate(0deg);
+    }
+}
+
+/* Floating medical icons - randomly positioned */
+.floating-icon {
+    position: absolute;
+    font-size: 3.5rem;
+    opacity: 0.2;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.icon-1 {
+    top: 12%;
+    right: 18%;
+    animation: floatRandom1 9s ease-in-out infinite;
+}
+
+.icon-2 {
+    top: 65%;
+    right: 12%;
+    font-size: 3rem;
+    animation: floatRandom2 11s ease-in-out infinite;
+}
+
+.icon-3 {
+    bottom: 20%;
+    right: 25%;
+    font-size: 2.8rem;
+    opacity: 0.15;
+    animation: floatRandom3 13s ease-in-out infinite;
+}
+
+.icon-4 {
+    top: 35%;
+    left: 12%;
+    font-size: 3.2rem;
+    animation: floatRandom4 10s ease-in-out infinite;
+}
+
+.icon-5 {
+    bottom: 35%;
+    left: 20%;
+    font-size: 2.5rem;
+    opacity: 0.18;
+    animation: floatRandom5 14s ease-in-out infinite;
+}
+
+.icon-6 {
+    top: 75%;
+    left: 8%;
+    font-size: 3rem;
+    animation: floatRandom6 12s ease-in-out infinite;
+}
+
+.icon-7 {
+    top: 50%;
+    right: 8%;
+    font-size: 3.3rem;
+    opacity: 0.16;
+    animation: floatRandom7 15s ease-in-out infinite;
+}
+
+/* Random float animations */
+@keyframes floatRandom1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(-40px, 50px) rotate(180deg);
+    }
+}
+
+@keyframes floatRandom2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg) scale(1);
+    }
+
+    50% {
+        transform: translate(50px, -30px) rotate(0deg) scale(1.15);
+    }
+}
+
+@keyframes floatRandom3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(-30px, -40px) rotate(120deg);
+    }
+
+    66% {
+        transform: translate(30px, 20px) rotate(240deg);
+    }
+}
+
+@keyframes floatRandom4 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(60px, 40px) rotate(180deg) scale(0.9);
+    }
+}
+
+@keyframes floatRandom5 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+
+    50% {
+        transform: translate(-50px, -60px) rotate(0deg);
+    }
+}
+
+@keyframes floatRandom6 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(40px, -30px) rotate(90deg);
+    }
+
+    75% {
+        transform: translate(-20px, 40px) rotate(270deg);
+    }
+}
+
+@keyframes floatRandom7 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(-45px, 55px) rotate(180deg) scale(1.1);
+    }
+}
+
+.icon-8 {
+    top: 8%;
+    left: 25%;
+    font-size: 2.7rem;
+    opacity: 0.17;
+    animation: floatRandom8 11s ease-in-out infinite;
+}
+
+.icon-9 {
+    top: 28%;
+    right: 35%;
+    font-size: 3.4rem;
+    opacity: 0.19;
+    animation: floatRandom9 13s ease-in-out infinite;
+}
+
+.icon-10 {
+    bottom: 10%;
+    left: 35%;
+    font-size: 3.1rem;
+    animation: floatRandom10 10s ease-in-out infinite;
+}
+
+.icon-11 {
+    top: 45%;
+    left: 5%;
+    font-size: 2.6rem;
+    opacity: 0.16;
+    animation: floatRandom11 14s ease-in-out infinite;
+}
+
+.icon-12 {
+    bottom: 45%;
+    right: 5%;
+    font-size: 2.9rem;
+    animation: floatRandom12 12s ease-in-out infinite;
+}
+
+.icon-13 {
+    top: 18%;
+    left: 40%;
+    font-size: 2.8rem;
+    opacity: 0.14;
+    animation: floatRandom13 15s ease-in-out infinite;
+}
+
+.icon-14 {
+    bottom: 28%;
+    right: 40%;
+    font-size: 3.2rem;
+    opacity: 0.18;
+    animation: floatRandom14 11s ease-in-out infinite;
+}
+
+.icon-15 {
+    top: 55%;
+    left: 30%;
+    font-size: 2.5rem;
+    opacity: 0.15;
+    animation: floatRandom15 13s ease-in-out infinite;
+}
+
+/* Additional animations for new icons */
+@keyframes floatRandom8 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(35px, -45px) rotate(180deg);
+    }
+}
+
+@keyframes floatRandom9 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg) scale(1);
+    }
+
+    50% {
+        transform: translate(-55px, 35px) rotate(0deg) scale(1.12);
+    }
+}
+
+@keyframes floatRandom10 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    33% {
+        transform: translate(45px, -25px) rotate(120deg);
+    }
+
+    66% {
+        transform: translate(-35px, 30px) rotate(240deg);
+    }
+}
+
+@keyframes floatRandom11 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(50px, 50px) rotate(180deg) scale(0.88);
+    }
+}
+
+@keyframes floatRandom12 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+
+    50% {
+        transform: translate(-40px, -50px) rotate(0deg);
+    }
+}
+
+@keyframes floatRandom13 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(-35px, 40px) rotate(90deg);
+    }
+
+    75% {
+        transform: translate(30px, -35px) rotate(270deg);
+    }
+}
+
+@keyframes floatRandom14 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(55px, -45px) rotate(180deg) scale(1.08);
+    }
+}
+
+@keyframes floatRandom15 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+
+    50% {
+        transform: translate(-48px, 52px) rotate(0deg);
+    }
+}
+
+.login-card {
+    margin: var(--spacing-xl) auto;
+    position: relative;
+    z-index: 1;
+    animation: cardFloat 6s ease-in-out infinite;
+}
+
+@keyframes cardFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+/* Remember me checkbox - Blue color */
+.form-options .form-checkbox label {
+    color: #3b82f6 !important;
+    font-weight: 500;
+}
+
+.forgot-link {
+    color: var(--color-primary-light);
+    font-size: 0.875rem;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.forgot-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    transition: width 0.3s ease;
+}
+
+.forgot-link:hover::after {
+    width: 100%;
+}
+
+.forgot-link:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.link-primary {
+    color: var(--color-primary-light);
+    font-weight: 600;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.link-primary::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    transition: width 0.3s ease;
+}
+
+.link-primary:hover::after {
+    width: 100%;
+}
+
+.link-primary:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.form-footer p {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.btn-loader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        padding: 0 var(--spacing-md);
+    }
+
+    .login-card {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+
+    .login-main .container-sm {
+        max-width: 90%;
+    }
+
+    .floating-icon {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-options {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: flex-start;
+    }
+
+    .login-header h1 {
+        font-size: 1.75rem;
+    }
+
+    .auth-tabs {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .login-main .container-sm {
+        max-width: 95%;
+    }
+
+    .login-card {
+        padding: 0.75rem 1rem;
+        max-height: none;
+    }
+
+    .floating-icon {
+        font-size: 2rem;
+        opacity: 0.1;
+    }
+
+    .card-title {
+        font-size: 1.35rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.8125rem;
+    }
+
+    .login-main {
+        padding-top: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .floating-icon {
+        display: none;
+    }
+}

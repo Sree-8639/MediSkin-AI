@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview & Download PDF Demo</title>
+
+    <!-- html2pdf.js via CDN – bundles jsPDF + html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        /* ── Page chrome ── */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-preview {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-pdf {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+        }
+
+        .btn-pdf:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Preview wrapper – hidden by default */
+        .preview-wrapper {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .preview-wrapper.visible {
+            display: block;
+        }
+
+        /* ─────────────────────────────────────────────────────────
+           REPORT CONTENT  (the element that gets converted to PDF)
+           ─────────────────────────────────────────────────────────
+           IMPORTANT:
+           • Use only inline-friendly CSS / no external fonts inside
+             the report section for maximum PDF fidelity.
+           • Avoid position:fixed / viewport-based units inside.
+        */
+        #reportContent {
+            background: #ffffff;
+            color: #1e293b;
+            font-family: Arial, sans-serif;
+            padding: 48px 52px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* Header band */
+        #reportContent .report-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 20px;
+            margin-bottom: 28px;
+        }
+
+        #reportContent .report-header .brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+
+        #reportContent .report-header .report-meta {
+            text-align: right;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Section titles */
+        #reportContent h2.section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+            padding-left: 10px;
+            margin: 24px 0 14px;
+        }
+
+        /* Info grid */
+        #reportContent .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 32px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        #reportContent .info-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        #reportContent .info-label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        #reportContent .info-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Result card */
+        #reportContent .result-card {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border: 2px solid #93c5fd;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #reportContent .result-card .disease-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 6px;
+        }
+
+        #reportContent .result-card .confidence {
+            font-size: 14px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* Severity badge */
+        #reportContent .severity-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            margin-top: 8px;
+        }
+
+        #reportContent .severity-moderate {
+            background: #f59e0b;
+        }
+
+        #reportContent .severity-low {
+            background: #10b981;
+        }
+
+        #reportContent .severity-high {
+            background: #ef4444;
+        }
+
+        /* Uploaded image */
+        #reportContent .image-block {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        #reportContent .image-block img {
+            max-width: 260px;
+            max-height: 220px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            object-fit: cover;
+        }
+
+        /* Recommendations list */
+        #reportContent ul.recs {
+            padding-left: 20px;
+        }
+
+        #reportContent ul.recs li {
+            margin-bottom: 6px;
+            color: #334155;
+        }
+
+        /* Disclaimer */
+        #reportContent .disclaimer {
+            margin-top: 32px;
+            font-size: 10px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 14px;
+        }
+
+        /* Footer */
+        #reportContent .report-footer {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 10px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🩺 MediSkin AI — Report Demo</h1>
+
+    <div class="controls">
+        <button class="btn btn-preview" onclick="showPreview()">👁 Preview Report</button>
+        <button class="btn btn-pdf" id="pdfBtn" onclick="downloadPDF()" disabled>⬇ Download PDF</button>
+    </div>
+
+    <!-- Preview wrapper -->
+    <div class="preview-wrapper" id="previewWrapper">
+
+        <!-- ╔════════════════════════════════════════════════════════╗
+             ║  #reportContent  ←  THIS is captured for the PDF     ║
+             ╚════════════════════════════════════════════════════════╝ -->
+        <div id="reportContent">
+
+            <!-- Header -->
+            <div class="report-header">
+                <div class="brand">🩺 MediSkin AI</div>
+                <div class="report-meta">
+                    <strong>Skin Disease Analysis Report</strong><br>
+                    Date: <span id="rDate"></span><br>
+                    Report ID: <span id="rId"></span>
+                </div>
+            </div>
+
+            <!-- Patient info -->
+            <h2 class="section-title">Patient Information</h2>
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value" id="rName">Shanmugam K.</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Age</span>
+                    <span class="info-value">28</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Location</span>
+                    <span class="info-value">Chennai, Tamil Nadu, India</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Analysis Date</span>
+                    <span class="info-value" id="rDate2"></span>
+                </div>
+            </div>
+
+            <!-- Uploaded image -->
+            <h2 class="section-title">Uploaded Skin Image</h2>
+            <div class="image-block">
+                <!--
+                    For images to appear in the PDF, they must be:
+                    (a) same-origin, or
+                    (b) base64 data URIs.
+                    Using a data URI placeholder here so the PDF always works.
+                -->
+                <img id="skinImage" src="https://placehold.co/260x220/dbeafe/1e40af?text=Skin+Sample"
+                    alt="Uploaded skin image" crossorigin="anonymous">
+            </div>
+
+            <!-- Diagnosis result -->
+            <h2 class="section-title">Diagnosis Result</h2>
+            <div class="result-card">
+                <div class="disease-name" id="rDisease">Eczema (Atopic Dermatitis)</div>
+                <div class="confidence">Confidence: <strong id="rConf">87.4%</strong></div>
+                <span class="severity-badge severity-moderate" id="rSeverity">Moderate Severity</span>
+            </div>
+
+            <!-- Top predictions -->
+            <h2 class="section-title">Top Predictions</h2>
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">#1 Prediction</span>
+                    <span class="info-value">Eczema — 87.4%</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">#2 Prediction</span>
+                    <span class="info-value">Psoriasis — 7.2%</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">#3 Prediction</span>
+                    <span class="info-value">Contact Dermatitis — 3.1%</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Model Accuracy</span>
+                    <span class="info-value">95.3%</span>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <h2 class="section-title">Recommendations</h2>
+            <ul class="recs">
+                <li>Consult a licensed dermatologist for a formal diagnosis and treatment plan.</li>
+                <li>Avoid known irritants and allergens that may aggravate eczema.</li>
+                <li>Apply fragrance-free moisturiser at least twice daily.</li>
+                <li>Use mild, non-soap cleansers; avoid hot water on affected areas.</li>
+                <li>Wear soft, breathable fabric (e.g. 100% cotton) to reduce friction.</li>
+            </ul>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                ⚠ <strong>Disclaimer:</strong> This report is generated by an AI-based system and is intended for
+                informational purposes only. It does not constitute a medical diagnosis or replace professional
+                medical advice. Always consult a qualified dermatologist before starting any treatment.
+            </div>
+
+            <div class="report-footer">© 2026 MediSkin AI · All rights reserved</div>
+        </div>
+        <!-- end #reportContent -->
+
+    </div>
+    <!-- end .preview-wrapper -->
+
+    <script>
+        /* ── Populate dynamic fields ── */
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+        const reportId = 'MSK-' + now.getTime().toString(36).toUpperCase();
+
+        document.getElementById('rDate').textContent = dateStr;
+        document.getElementById('rDate2').textContent = dateStr;
+        document.getElementById('rId').textContent = reportId;
+
+        /* ── Show Preview ── */
+        function showPreview() {
+            const wrapper = document.getElementById('previewWrapper');
+            wrapper.classList.add('visible');
+            document.getElementById('pdfBtn').disabled = false;
+
+            // Scroll to preview
+            wrapper.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* ── Download PDF ──
+           Key settings that prevent blank pages:
+           • html2canvas useCORS: true        → loads cross-origin images
+           • html2canvas allowTaint: false     → safer with mixed content
+           • html2canvas scale: 2             → crisp text, not blurry
+           • html2pdf pagebreak.mode 'avoid-all' → prevents mid-element page cuts
+        */
+        async function downloadPDF() {
+            const btn = document.getElementById('pdfBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Generating…';
+
+            const element = document.getElementById('reportContent');
+
+            // Wait for all images inside the element to fully load
+            const images = [...element.querySelectorAll('img')];
+            await Promise.all(images.map(img => {
+                if (img.complete) return Promise.resolve();
+                return new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;   // don't block on error
+                });
+            }));
+
+            const opt = {
+                margin: [10, 10, 10, 10],   // top, left, bottom, right (mm)
+                filename: 'MediSkin_AI_Report.pdf',
+                image: { type: 'jpeg', quality: 0.97 },
+                html2canvas: {
+                    scale: 2,              // 2× for sharp text
+                    useCORS: true,           // allow cross-origin images
+                    allowTaint: false,
+                    logging: false,
+                    /* Tell html2canvas the element's exact pixel width so
+                       it renders the full content, not just the viewport slice */
+                    windowWidth: element.scrollWidth
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                },
+                pagebreak: {
+                    mode: ['avoid-all', 'css', 'legacy']
+                }
+            };
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (err) {
+                console.error('PDF generation failed:', err);
+                alert('PDF generation failed. See console for details.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '⬇ Download PDF';
+            }
+        }
+    </script>
+</body>
+
+</html>

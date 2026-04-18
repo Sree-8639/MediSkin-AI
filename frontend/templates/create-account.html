@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MediSkin AI - Professional skin disease diagnosis platform">
+    <title>Create Account - MediSkin AI</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/create-account.css' %}">
+    <!-- Backend API URL injected by Django — read by config.js -->
+    <meta name="api-base-url" content="{{ API_BASE_URL }}">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="MediSkin AI" class="logo-image">
+                <span>MediSkin AI</span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
+                aria-controls="primaryNav" data-nav-toggle>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <nav class="nav-menu" id="primaryNav" data-nav-menu>
+                <a href="{% url 'login' %}" class="btn btn-outline btn-sm">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="register-main">
+        <!-- Floating Medical Icons -->
+        <div class="floating-icon icon-1">🔬</div>
+        <div class="floating-icon icon-2">🩺</div>
+        <div class="floating-icon icon-3">💉</div>
+        <div class="floating-icon icon-4">🧪</div>
+        <div class="floating-icon icon-5">🏥</div>
+        <div class="floating-icon icon-6">🩹</div>
+        <div class="floating-icon icon-7">❤️</div>
+        <div class="floating-icon icon-8">💊</div>
+        <div class="floating-icon icon-9">🧬</div>
+
+        <div class="container container-sm">
+            <div class="card register-card">
+                <div class="card-header">
+                    <h1 class="card-title">Create Account</h1>
+                    <p class="card-subtitle">Join MediSkin AI for professional diagnostics</p>
+                </div>
+
+                <form id="registerForm" class="register-form">
+                    <!-- Name Field -->
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" class="form-input"
+                            placeholder="Enter your full name" required>
+                        <span class="form-error" id="fullNameError">Please enter your full name</span>
+                    </div>
+
+                    <!-- Username Field -->
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" id="username" name="username" class="form-input"
+                            placeholder="Choose a username" required autocomplete="username">
+                        <span class="form-error" id="usernameError">Username must be 3-20 characters</span>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input"
+                            placeholder="your.email@example.com" required autocomplete="email">
+                        <span class="form-error" id="emailError">Please enter a valid email</span>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number (Optional)</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" placeholder="+1 (555) 000-0000"
+                            autocomplete="tel">
+                        <span class="form-error" id="phoneError">Please enter a valid phone number</span>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-input"
+                            placeholder="Create a strong password" required autocomplete="new-password">
+                        <span class="form-error" id="passwordError">Password must be at least 8 characters</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-input"
+                            placeholder="Re-enter your password" required autocomplete="new-password">
+                        <span class="form-error" id="confirmPasswordError">Passwords do not match</span>
+                    </div>
+
+                    <!-- Terms & Conditions -->
+                    <div class="form-group">
+                        <div class="form-checkbox">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                            <label for="agreeTerms">
+                                I agree to the <a href="#" class="link-primary">Terms & Conditions</a>
+                            </label>
+                        </div>
+                        <span class="form-error" id="termsError">You must agree to the terms</span>
+                    </div>
+
+                    <div class="alert alert-success hidden" id="successMessage">
+                        <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Account created successfully!</span>
+                    </div>
+
+                    <!-- Create Account Button -->
+                    <button type="submit" id="registerSubmitBtn" class="btn btn-primary btn-full">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-loader hidden">
+                            <svg class="spinner" viewBox="0 0 24 24">
+                                <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4" fill="none"></circle>
+                            </svg>
+                        </span>
+                    </button>
+
+                    <!-- OR Divider -->
+                    <div class="oauth-divider">
+                        <span class="oauth-divider-line"></span>
+                        <span class="oauth-divider-text">or</span>
+                        <span class="oauth-divider-line"></span>
+                    </div>
+
+                    <!-- Google OAuth Button -->
+                    <a href="/accounts/google/login/" id="googleSignupBtn" class="btn-google">
+                        <svg class="google-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span>Sign up with Google</span>
+                    </a>
+
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="{% url 'login' %}" class="link-primary">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <p class="footer-text">&copy; 2026 MediSkin AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/config.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+    <script src="{% static 'js/create-account.js' %}"></script>
+</body>
+
+</html>

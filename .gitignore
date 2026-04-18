@@ -1,0 +1,58 @@
+# ─── Secrets & Environment ───────────────────────────────────────────────────
+.env
+*.env
+
+# ─── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# ─── Django ──────────────────────────────────────────────────────────────────
+*.log
+db.sqlite3
+media/
+temp_uploads/
+backend/staticfiles/
+
+# ─── Virtual Environment ─────────────────────────────────────────────────────
+venv/
+env/
+.venv/
+
+# ─── ML Model Files (too large for GitHub — use Git LFS or Render Disk) ──────
+*.pkl
+*.h5
+*.keras
+*.pt
+*.pth
+backend/ml/models/skin_disease_classifier.*
+
+# ─── Dataset (too large for GitHub) ──────────────────────────────────────────
+dataset/
+
+# ─── IDE & Editor ────────────────────────────────────────────────────────────
+.vscode/
+*.code-workspace
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Jupyter Notebooks (checkpoints) ─────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ─── Test / Debug artifacts ──────────────────────────────────────────────────
+_inspect_output.txt
+_layers.txt
+_test_out.txt
+

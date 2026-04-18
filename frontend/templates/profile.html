@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - MediSkin AI</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <!-- Backend API URL injected by Django — read by config.js -->
+    <meta name="api-base-url" content="{{ API_BASE_URL }}">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="MediSkin AI" class="logo-image">
+                <span>MediSkin AI</span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
+                aria-controls="primaryNav" data-nav-toggle>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <nav class="nav-menu" id="primaryNav" data-nav-menu>
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'diagnostics' %}" class="nav-link">Diagnostics</a>
+                <a href="{% url 'profile' %}" class="nav-link active">Profile</a>
+                <button class="btn btn-outline btn-sm" id="logoutBtn">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="profile-main">
+        <div class="container">
+            <div class="page-header">
+                <h1>My Profile</h1>
+                <p>Manage your account information and preferences</p>
+            </div>
+
+            <div class="profile-grid">
+                <!-- Left Column: 2 Containers -->
+                <div class="profile-col profile-col-left">
+                    <!-- Profile Picture Section -->
+                    <div class="card profile-picture-card">
+                        <h2 class="card-section-title">Profile Picture</h2>
+                        <div class="profile-picture-container">
+                            <div class="profile-picture" id="profilePicture" title="Click to change photo">
+                                <span class="profile-initials" id="profileInitials">JD</span>
+                                <div class="profile-picture-overlay" id="profilePictureOverlay">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="none"
+                                        stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                        viewBox="0 0 24 24">
+                                        <!-- Person head -->
+                                        <circle cx="12" cy="8" r="4" />
+                                        <!-- Person body arc -->
+                                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                                        <!-- Pencil (bottom-right) -->
+                                        <path d="M18.5 15.5l1.5 1.5-4 4H14.5v-1.5z" stroke-width="1.5" />
+                                        <path d="M18.5 15.5l1.5 1.5" stroke-width="1.5" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <input type="file" id="profilePictureInput" accept="image/*" hidden>
+                            <p class="profile-picture-hint">Click photo to update</p>
+                        </div>
+                    </div>
+
+                    <!-- Account Security -->
+                    <div class="card security-card">
+                        <h2 class="card-section-title">Account Security</h2>
+
+                        <form id="passwordForm">
+                            <div class="form-group">
+                                <label for="currentPassword" class="form-label">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" class="form-input"
+                                    placeholder="Enter current password">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" class="form-input"
+                                    placeholder="Enter new password">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirmNewPassword" name="confirmNewPassword"
+                                    class="form-input" placeholder="Confirm new password">
+                            </div>
+
+                            <div class="success-message hidden" id="passwordSuccess">
+                                <span>Password changed successfully!</span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right Column: 2 Containers -->
+                <div class="profile-col profile-col-right">
+                    <!-- Personal Information -->
+                    <div class="card">
+                        <div class="card-header-flex">
+                            <h2 class="card-section-title">👤 Personal Information</h2>
+                            <button type="button" class="btn btn-sm btn-outline" id="editPersonalBtn">Edit</button>
+                        </div>
+
+                        <form id="personalInfoForm">
+                            <div class="form-group">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-input" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-input" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" id="username" name="username" class="form-input" disabled readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" id="email" name="email" class="form-input" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" id="password" name="password" class="form-input" value="••••••••"
+                                    disabled readonly>
+                            </div>
+
+                            <div class="form-actions hidden" id="personalActions">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-outline" id="cancelPersonalBtn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Details - Full Width -->
+            <div class="card location-full-width">
+                <div class="card-header-flex">
+                    <h2 class="card-section-title">📍 Location Details</h2>
+                    <button type="button" class="btn btn-sm btn-outline" id="editLocationBtn">Edit</button>
+                </div>
+
+                <form id="locationForm">
+                    <div class="location-grid">
+                        <div class="form-group">
+                            <label for="country" class="form-label">Country</label>
+                            <select id="country" name="country" class="form-select" disabled>
+                                <option value="">Select Country</option>
+                                <option value="India">India</option>
+                                <option value="USA">United States</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="Canada">Canada</option>
+                                <option value="Australia">Australia</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="state" class="form-label">State/Province</label>
+                            <select id="state" name="state" class="form-select" disabled>
+                                <option value="">Select State</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="district" class="form-label">District</label>
+                            <select id="district" name="district" class="form-select" disabled>
+                                <option value="">Select District</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="city" class="form-label">City/Town</label>
+                            <select id="city" name="city" class="form-select" disabled>
+                                <option value="">Select City</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions hidden" id="locationActions">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-outline" id="cancelLocationBtn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Prediction History - Full Width -->
+            <div class="card history-full-width">
+                <h2 class="card-section-title">📊 Prediction History</h2>
+                <p class="card-subtitle">View your past skin disease predictions</p>
+
+                <div id="historyContainer">
+                    <div class="history-placeholder">
+                        <svg class="history-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                            </path>
+                        </svg>
+                        <p>Loading prediction history...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Messages -->
+        <div class="alert alert-success hidden" id="profileSuccess">
+            <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span id="successText">Profile updated successfully!</span>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <p class="footer-text">&copy; 2026 MediSkin AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/config.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+    <script src="{% static 'js/profile.js' %}"></script>
+</body>
+
+</html>

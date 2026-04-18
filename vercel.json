@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "name": "mediskin-frontend",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+
+  "comment": [
+    "MediSkin AI uses Django to serve ALL pages (HTML is Django-rendered).",
+    "This vercel.json is therefore NOT used for the main app — the entire",
+    "Django project (frontend + backend) is hosted on Render.",
+    "",
+    "This file exists so that IF you ever add a standalone static landing page",
+    "or marketing site to the 'public/' folder, Vercel can serve it.",
+    "",
+    "HOW THE DEPLOYMENT ACTUALLY WORKS:",
+    "  - Backend (Django API + HTML pages): Render.com",
+    "  - Static assets (CSS/JS/images): Served by WhiteNoise from Render",
+    "  - This repo is connected to Render, NOT Vercel, for the main app.",
+    "",
+    "IF YOU WANT A VERCEL FRONTEND IN THE FUTURE:",
+    "  1. Create a React/Next.js app in a 'frontend-app/' subfolder",
+    "  2. Set NEXT_PUBLIC_API_URL=https://your-render-url.onrender.com",
+    "  3. Update this vercel.json to point outputDirectory to 'frontend-app/.next'"
+  ],
+
+  "framework": null,
+  "outputDirectory": "public",
+  "buildCommand": "echo 'No build step — static files only'",
+  "installCommand": "echo 'No install step'",
+
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "1": {
+    "label": "LOW",
+    "emoji": "\ud83d\udfe2",
+    "advice": "Monitor; consult a dermatologist if it worsens."
+  },
+  "2": {
+    "label": "MODERATE",
+    "emoji": "\ud83d\udfe1",
+    "advice": "Schedule a dermatology appointment."
+  },
+  "3": {
+    "label": "HIGH",
+    "emoji": "\ud83d\udfe0",
+    "advice": "Visit a doctor promptly. Do not delay treatment."
+  },
+  "4": {
+    "label": "CRITICAL",
+    "emoji": "\ud83d\udd34",
+    "advice": "Seek IMMEDIATE medical attention."
+  }
+}

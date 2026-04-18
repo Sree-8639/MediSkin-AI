@@ -1,0 +1,363 @@
+/* Create Account Page Styles */
+
+.register-main {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-xl) 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Override container width for create account - make it wider */
+.register-main .container-sm {
+    max-width: 450px;
+}
+
+/* Reduce card height */
+.register-card {
+    padding: 0.75rem 1.25rem;
+}
+
+/* Floating medical icons - animated background */
+.register-main .floating-icon {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+    animation-duration: 15s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+.register-main .icon-1 {
+    top: 10%;
+    left: 10%;
+    animation-name: floatAnimation1;
+}
+
+.register-main .icon-2 {
+    top: 20%;
+    right: 15%;
+    animation-name: floatAnimation2;
+    animation-duration: 18s;
+}
+
+.register-main .icon-3 {
+    bottom: 25%;
+    left: 8%;
+    animation-name: floatAnimation3;
+    animation-duration: 20s;
+}
+
+.register-main .icon-4 {
+    top: 50%;
+    right: 10%;
+    animation-name: floatAnimation4;
+    animation-duration: 16s;
+}
+
+.register-main .icon-5 {
+    bottom: 15%;
+    right: 20%;
+    animation-name: floatAnimation5;
+    animation-duration: 22s;
+}
+
+.register-main .icon-6 {
+    top: 70%;
+    left: 15%;
+    animation-name: floatAnimation6;
+    animation-duration: 19s;
+}
+
+.register-main .icon-7 {
+    top: 35%;
+    left: 5%;
+    animation-name: floatAnimation7;
+    animation-duration: 17s;
+}
+
+.register-main .icon-8 {
+    bottom: 40%;
+    right: 8%;
+    animation-name: floatAnimation8;
+    animation-duration: 21s;
+}
+
+.register-main .icon-9 {
+    top: 15%;
+    left: 50%;
+    animation-name: floatAnimation9;
+    animation-duration: 23s;
+}
+
+/* Floating animations */
+@keyframes floatAnimation1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(30px, -40px) rotate(90deg);
+    }
+
+    50% {
+        transform: translate(-20px, -80px) rotate(180deg);
+    }
+
+    75% {
+        transform: translate(-40px, -40px) rotate(270deg);
+    }
+}
+
+@keyframes floatAnimation2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg) scale(1);
+    }
+
+    33% {
+        transform: translate(-50px, 60px) rotate(120deg) scale(1.1);
+    }
+
+    66% {
+        transform: translate(40px, 40px) rotate(240deg) scale(0.9);
+    }
+}
+
+@keyframes floatAnimation3 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(60px, -70px) rotate(180deg);
+    }
+}
+
+@keyframes floatAnimation4 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(-45px, 55px) rotate(180deg) scale(1.1);
+    }
+}
+
+@keyframes floatAnimation5 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+
+    50% {
+        transform: translate(-40px, -50px) rotate(0deg);
+    }
+}
+
+@keyframes floatAnimation6 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(-35px, 40px) rotate(90deg);
+    }
+
+    75% {
+        transform: translate(30px, -35px) rotate(270deg);
+    }
+}
+
+@keyframes floatAnimation7 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: translate(50px, 50px) rotate(180deg) scale(0.88);
+    }
+}
+
+@keyframes floatAnimation8 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(35px, -45px) rotate(180deg);
+    }
+}
+
+@keyframes floatAnimation9 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(360deg) scale(1);
+    }
+
+    50% {
+        transform: translate(-55px, 35px) rotate(0deg) scale(1.12);
+    }
+}
+
+.link-primary {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.link-primary:hover {
+    text-decoration: underline;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.form-footer p {
+    color: var(--color-gray-600);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.btn-loader {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+   GOOGLE OAUTH BUTTON & OR DIVIDER
+   ============================================ */
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.65rem 1.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    color: #e5e7eb;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-google:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-google:active {
+    transform: translateY(0);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.oauth-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+}
+
+.oauth-divider-line {
+    flex: 1;
+    height: 1px;
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.oauth-divider-text {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 768px) {
+    .register-main .container-sm {
+        max-width: 90%;
+    }
+
+    .register-card {
+        padding: 1rem;
+    }
+
+    .floating-icon {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-main .container-sm {
+        max-width: 95%;
+    }
+
+    .register-card {
+        padding: 0.75rem 1rem;
+    }
+
+    .floating-icon {
+        font-size: 2rem;
+        opacity: 0.1;
+    }
+
+    .card-title {
+        font-size: 1.35rem;
+    }
+
+    .card-subtitle {
+        font-size: 0.8125rem;
+    }
+
+    .form-footer {
+        margin-top: var(--spacing-md);
+        padding-top: var(--spacing-md);
+    }
+
+    .register-main {
+        padding-top: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+    }
+
+    .floating-icon {
+        display: none;
+    }
+}

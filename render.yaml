@@ -1,0 +1,75 @@
+services:
+  - type: web
+    name: mediskin-backend
+    env: python
+    rootDir: .
+    plan: free
+    # Build runs from the repository root
+    buildCommand: ./render-build.sh
+    # Start command — uses DJANGO_SETTINGS_MODULE env var (not --settings flag)
+    startCommand: cd backend && gunicorn mediskin.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+
+    envVars:
+      # ── Auto-linked PostgreSQL DB (free tier) ────────────────────────────────
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mediskin-db
+          property: connectionString
+
+      # ── Django Core ──────────────────────────────────────────────────────────
+      - key: DJANGO_SETTINGS_MODULE
+        value: mediskin.settings_prod
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+
+      # ── Set AFTER Render gives you a URL, e.g. mediskin-backend.onrender.com ─
+      # Replace 'mediskin-backend.onrender.com' with your actual Render domain:
+      - key: ALLOWED_HOSTS
+        value: "mediskin-backend.onrender.com"
+
+      # ── Set AFTER Vercel gives you a URL, e.g. mediskin-ai.vercel.app ────────
+      # Replace 'mediskin-ai.vercel.app' with your actual Vercel domain:
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://mediskin-ai.vercel.app"
+
+      # ── Email (Gmail SMTP) ───────────────────────────────────────────────────
+      # Set these manually in Render Dashboard → Environment
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: "MediSkin AI <anyasreekadali@gmail.com>"
+
+      # ── Google OAuth (allauth) ───────────────────────────────────────────────
+      # Set manually — DO NOT commit these values to Git
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+
+      # ── django.contrib.sites (allauth requires this) ─────────────────────────
+      # After first deploy: run setup_oauth.py or manually set Site domain in admin
+      - key: SITE_ID
+        value: "1"
+
+      # ── API Base URL ─────────────────────────────────────────────────────────
+      # Set this to your ACTUAL Render service URL after first deploy.
+      # Used by Django to inject the backend URL into every HTML page (meta tag),
+      # and to build correct links in email notifications.
+      # Example: https://mediskin-backend.onrender.com
+      - key: API_BASE_URL
+        value: "https://mediskin-backend.onrender.com"
+
+      # ── Google Maps (optional) ────────────────────────────────────────────────
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+
+  # ── PostgreSQL Database (free tier) ─────────────────────────────────────────
+  - type: pserv
+    name: mediskin-db
+    ipAllowList: []
+    plan: free
+    postgresVersion: "14"

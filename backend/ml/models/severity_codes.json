@@ -1,0 +1,246 @@
+{
+  "generated_date": "2026-03-04 15:37:31",
+  "severity_levels": {
+    "1": {
+      "code": 1,
+      "label": "LOW",
+      "color": "green",
+      "emoji": "\ud83d\udfe2",
+      "description": "Mild or cosmetic condition. Usually self-limiting.",
+      "advice": "Monitor the condition. Consult a dermatologist if it worsens."
+    },
+    "2": {
+      "code": 2,
+      "label": "MODERATE",
+      "color": "yellow",
+      "emoji": "\ud83d\udfe1",
+      "description": "Moderate condition requiring medical attention.",
+      "advice": "Schedule an appointment with a dermatologist for evaluation and treatment."
+    },
+    "3": {
+      "code": 3,
+      "label": "HIGH",
+      "color": "orange",
+      "emoji": "\ud83d\udfe0",
+      "description": "Significant medical condition. May cause complications if untreated.",
+      "advice": "Visit a doctor promptly. Do not delay treatment."
+    },
+    "4": {
+      "code": 4,
+      "label": "CRITICAL",
+      "color": "red",
+      "emoji": "\ud83d\udd34",
+      "description": "Potentially malignant or life-threatening. Urgent care required.",
+      "advice": "Seek IMMEDIATE medical attention. This condition may be serious."
+    }
+  },
+  "disease_severity": {
+    "Acne and Rosacea Photos": {
+      "severity_code": 1,
+      "icd10_code": "L70 / L71",
+      "common_name": "Acne / Rosacea",
+      "treatment": "Topical retinoids, benzoyl peroxide, azelaic acid, antibiotics for rosacea",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Common inflammatory skin condition. Rarely serious but can be chronic."
+    },
+    "Seborrheic Keratoses and other Benign Tumors": {
+      "severity_code": 1,
+      "icd10_code": "L82",
+      "common_name": "Seborrheic Keratoses",
+      "treatment": "Usually no treatment needed; cryotherapy or curettage for cosmetic removal",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Benign wart-like growths. No malignant potential."
+    },
+    "Urticaria Hives": {
+      "severity_code": 1,
+      "icd10_code": "L50",
+      "common_name": "Urticaria / Hives",
+      "treatment": "Antihistamines (cetirizine, loratadine), corticosteroids for severe cases",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Allergic reaction. Can become chronic (>6 weeks = chronic urticaria)."
+    },
+    "Eczema Photos": {
+      "severity_code": 2,
+      "icd10_code": "L20",
+      "common_name": "Eczema",
+      "treatment": "Emollients, topical corticosteroids, tacrolimus, dupilumab for severe cases",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Chronic inflammatory condition. Requires ongoing management."
+    },
+    "Atopic Dermatitis Photos": {
+      "severity_code": 2,
+      "icd10_code": "L20",
+      "common_name": "Atopic Dermatitis",
+      "treatment": "Moisturizers, topical steroids, calcineurin inhibitors, biologics (dupilumab)",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Often co-occurs with asthma and allergic rhinitis (atopic triad)."
+    },
+    "Psoriasis pictures Lichen Planus and related diseases": {
+      "severity_code": 2,
+      "icd10_code": "L40 / L43",
+      "common_name": "Psoriasis / Lichen Planus",
+      "treatment": "Topical steroids, phototherapy (PUVA/UVB), methotrexate, biologics",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "Chronic autoimmune condition. Psoriasis linked to psoriatic arthritis."
+    },
+    "Nail Fungus and other Nail Disease": {
+      "severity_code": 2,
+      "icd10_code": "B35.1 / L60",
+      "common_name": "Onychomycosis / Nail Disease",
+      "treatment": "Oral terbinafine/itraconazole, topical ciclopirox for mild cases",
+      "contagious": true,
+      "requires_biopsy": false,
+      "notes": "Fungal nail infection is contagious via shared surfaces. Slow to resolve."
+    },
+    "Poison Ivy Photos and other Contact Dermatitis": {
+      "severity_code": 2,
+      "icd10_code": "L23 / L25",
+      "common_name": "Contact Dermatitis",
+      "treatment": "Identify and remove allergen, topical steroids, oral prednisone for severe cases",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Reaction from contact with irritant or allergen (e.g., poison ivy, nickel)."
+    },
+    "Hair Loss Photos Alopecia and other Hair Diseases": {
+      "severity_code": 2,
+      "icd10_code": "L63 / L65",
+      "common_name": "Alopecia",
+      "treatment": "Minoxidil, finasteride (for AGA), corticosteroids (for alopecia areata)",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "May be autoimmune (alopecia areata) or androgenetic. Can be emotionally distressing."
+    },
+    "Tinea Ringworm Candidiasis and other Fungal Infections": {
+      "severity_code": 2,
+      "icd10_code": "B35 / B37",
+      "common_name": "Ringworm / Candidiasis",
+      "treatment": "Topical antifungals (clotrimazole, miconazole), oral fluconazole for resistant cases",
+      "contagious": true,
+      "requires_biopsy": false,
+      "notes": "Fungal infections are contagious. Candidiasis may indicate immune compromise."
+    },
+    "Exanthems and Drug Eruptions": {
+      "severity_code": 2,
+      "icd10_code": "R21 / L27",
+      "common_name": "Drug Eruption / Viral Rash",
+      "treatment": "Discontinue offending drug, antihistamines, steroids for severe reactions",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Drug eruptions can range from mild to severe (e.g., SJS/TEN \u2014 see Critical)."
+    },
+    "Warts Molluscum and other Viral Infections": {
+      "severity_code": 2,
+      "icd10_code": "B07 / B08.1",
+      "common_name": "Warts / Molluscum Contagiosum",
+      "treatment": "Cryotherapy, salicylic acid, imiquimod, cantharone",
+      "contagious": true,
+      "requires_biopsy": false,
+      "notes": "HPV-related warts and molluscum are contagious. Usually self-limiting in healthy patients."
+    },
+    "Light Diseases and Disorders of Pigmentation": {
+      "severity_code": 2,
+      "icd10_code": "L80 / L81",
+      "common_name": "Vitiligo / Pigmentation Disorder",
+      "treatment": "Topical steroids, tacrolimus, phototherapy, depigmentation agents",
+      "contagious": false,
+      "requires_biopsy": false,
+      "notes": "Often autoimmune. Significant psychosocial impact possible."
+    },
+    "Cellulitis Impetigo and other Bacterial Infections": {
+      "severity_code": 3,
+      "icd10_code": "L03 / L01",
+      "common_name": "Cellulitis / Impetigo",
+      "treatment": "Oral antibiotics (penicillins, cephalosporins); IV antibiotics for severe cellulitis",
+      "contagious": true,
+      "requires_biopsy": false,
+      "notes": "Cellulitis can spread rapidly and lead to sepsis if untreated. Prompt treatment essential."
+    },
+    "Bullous Disease Photos": {
+      "severity_code": 3,
+      "icd10_code": "L10 / L12",
+      "common_name": "Pemphigus / Bullous Pemphigoid",
+      "treatment": "High-dose corticosteroids, immunosuppressants (azathioprine, mycophenolate)",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "Autoimmune blistering. Can be extensive and life-threatening. Hospitalization may be needed."
+    },
+    "Herpes HPV and other STDs Photos": {
+      "severity_code": 3,
+      "icd10_code": "A60 / A63",
+      "common_name": "Herpes / STIs",
+      "treatment": "Antivirals (acyclovir, valacyclovir for HSV/VZV); HPV vaccine for prevention",
+      "contagious": true,
+      "requires_biopsy": false,
+      "notes": "Herpes is lifelong (latent). HPV can cause cervical cancer. Partner notification needed."
+    },
+    "Scabies Lyme Disease and other Infestations and Bites": {
+      "severity_code": 3,
+      "icd10_code": "B86 / A69.2",
+      "common_name": "Scabies / Lyme Disease",
+      "treatment": "Permethrin 5% for scabies; doxycycline for Lyme disease",
+      "contagious": true,
+      "requires_biopsy": false,
+      "notes": "Lyme disease (tick-borne) requires urgent antibiotic treatment to prevent chronic disease."
+    },
+    "Lupus and other Connective Tissue diseases": {
+      "severity_code": 3,
+      "icd10_code": "M32 / L93",
+      "common_name": "Lupus",
+      "treatment": "Hydroxychloroquine, NSAIDs, corticosteroids, immunosuppressants (belimumab)",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "Systemic lupus can affect kidneys, heart, lungs. Requires specialist management."
+    },
+    "Systemic Disease": {
+      "severity_code": 3,
+      "icd10_code": "M35 / various",
+      "common_name": "Systemic Disease with Skin Manifestation",
+      "treatment": "Treat underlying systemic condition; dermatology + internal medicine co-management",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "Skin findings may indicate serious internal disease (diabetes, liver disease, etc.)."
+    },
+    "Vascular Tumors": {
+      "severity_code": 3,
+      "icd10_code": "D18 / C49",
+      "common_name": "Vascular Tumors (Hemangioma / Angiosarcoma)",
+      "treatment": "Propranolol for infantile hemangioma; surgery/radiation for malignant types",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "Requires expert evaluation \u2014 benign (hemangioma) vs. malignant (angiosarcoma) distinction is critical."
+    },
+    "Vasculitis Photos": {
+      "severity_code": 3,
+      "icd10_code": "M31 / L95",
+      "common_name": "Vasculitis",
+      "treatment": "Corticosteroids, immunosuppressants (cyclophosphamide, rituximab) based on type",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "Inflammation of blood vessels. Can affect organs. Requires rheumatology involvement."
+    },
+    "Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": {
+      "severity_code": 4,
+      "icd10_code": "C44 / L57.0",
+      "common_name": "Skin Cancer (BCC / Actinic Keratosis)",
+      "treatment": "Surgical excision, Mohs surgery, photodynamic therapy, topical 5-FU / imiquimod",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "\u26a0\ufe0f MALIGNANT. Basal cell carcinoma is most common skin cancer. Actinic keratosis is pre-malignant. URGENT referral required."
+    },
+    "Melanoma Skin Cancer Nevi and Moles": {
+      "severity_code": 4,
+      "icd10_code": "C43",
+      "common_name": "Melanoma",
+      "treatment": "Wide local excision, sentinel lymph node biopsy, immunotherapy (pembrolizumab, nivolumab), targeted therapy (BRAF inhibitors)",
+      "contagious": false,
+      "requires_biopsy": true,
+      "notes": "\ud83d\udea8 MOST DANGEROUS SKIN CANCER. Can metastasize rapidly. IMMEDIATE specialist referral. Use ABCDE criteria (Asymmetry, Border, Color, Diameter, Evolving)."
+    }
+  }
+}
