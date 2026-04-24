@@ -37,6 +37,10 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')]
 
+# Hugging Face Spaces domains
+if os.environ.get('SPACE_ID'):
+    ALLOWED_HOSTS += ['.hf.space', '.huggingface.co']
+
 
 # Application definition
 
@@ -64,6 +68,7 @@ SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # serve static files in production
     'corsheaders.middleware.CorsMiddleware',  # CORS support (must be before CommonMiddleware)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -142,6 +147,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [FRONTEND_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files (user uploads like profile pictures)
 MEDIA_URL = '/media/'
@@ -253,3 +260,20 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
+# ─── CSRF Trusted Origins (required for HF Spaces / production) ──────────────
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+if os.environ.get('SPACE_ID'):
+    # HF Spaces sets SPACE_ID=username/space-name
+    space_id = os.environ['SPACE_ID'].replace('/', '-')
+    CSRF_TRUSTED_ORIGINS += [
+        f'https://{space_id}.hf.space',
+        'https://*.hf.space',
+    ]
+if os.environ.get('CSRF_TRUSTED_ORIGINS_EXTRA'):
+    CSRF_TRUSTED_ORIGINS.extend(
+        [o.strip() for o in os.environ['CSRF_TRUSTED_ORIGINS_EXTRA'].split(',')]
+    )

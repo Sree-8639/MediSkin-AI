@@ -57,9 +57,15 @@ if _extra_csrf:
 
 # ─── Database ─────────────────────────────────────────────────────────────────
 # Use SQLite stored in HF Spaces persistent volume (/data)
-# The /data directory persists across container restarts on HF Spaces
+# The /data directory persists across container restarts on HF Spaces.
+# Guard mkdir: during `docker build` collectstatic, /data is not mounted yet.
 _DATA_DIR = Path('/data')
-_DATA_DIR.mkdir(parents=True, exist_ok=True)
+try:
+    _DATA_DIR.mkdir(parents=True, exist_ok=True)
+except (PermissionError, OSError):
+    import tempfile as _tmp
+    _DATA_DIR = Path(_tmp.gettempdir()) / 'mediskin_data'
+    _DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 DATABASES = {
     'default': {
@@ -70,7 +76,10 @@ DATABASES = {
 
 # ─── Media Files (uploads) ────────────────────────────────────────────────────
 MEDIA_ROOT = _DATA_DIR / 'media'
-MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+try:
+    MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+except (PermissionError, OSError):
+    pass
 MEDIA_URL = '/media/'
 
 # ─── Static Files ─────────────────────────────────────────────────────────────

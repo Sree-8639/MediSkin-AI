@@ -1,70 +1,42 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# .dockerignore — files to EXCLUDE from the Docker build context
-# Keeps image lean. These files are not needed inside the container.
-# ─────────────────────────────────────────────────────────────────────────────
+# ─── Docker build ignores ────────────────────────────────────────────────────
+# Reduce build context size by excluding unnecessary files
 
-# Virtual environment (very large, not needed — pip installs fresh in Docker)
 venv/
 .venv/
 env/
-
-# Secrets
-.env
-*.env
-
-# SQLite dev database
-backend/db.sqlite3
-db.sqlite3
-
-# Collected static files (regenerated during build)
-backend/staticfiles/
-
-# Media uploads (runtime data, not build-time)
-media/
-temp_uploads/
-
-# Dataset (huge, not needed at runtime)
-dataset/
-
-# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.egg-info/
 
-# Git metadata  
-.git/
-.gitignore
-.gitignore.deployment
+# ML model files (downloaded from HF Hub at runtime)
+backend/ml/models/*.pkl
+backend/ml/models/*.h5
+backend/ml/models/*.keras
 
-# IDE / editor files
+# SQLite DB (fresh one created on each deploy)
+backend/db.sqlite3
+
+# IDE / OS files
 .vscode/
 .idea/
 *.code-workspace
-*.swp
-*~
-
-# OS files
 .DS_Store
 Thumbs.db
 
-# Jupyter notebook checkpoints
-.ipynb_checkpoints/
-# Exclude the large notebook (optional — comment out to include it)
-mediskin-automated-skin-disease-detection.ipynb
+# Git
+.git/
+.gitignore
 
-# Test artifacts  
-_inspect_output.txt
-_layers.txt
-_test_out.txt
-
-# Render-specific files (not needed in Docker)
-render-build.sh
-render.yaml
-
-# Vercel config
+# Misc
+temp_uploads/
+dataset/
+*.ipynb
+*.ipynb_checkpoints/
+MediSkin_AI*.ipynb
+*.bat
 vercel.json
+HF_README.md
 
-# Windows-specific dev scripts
-start_server.bat
+# Backend venv (nested)
+backend/venv/
