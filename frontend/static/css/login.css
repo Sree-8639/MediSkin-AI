@@ -67,7 +67,7 @@
 }
 
 .login-card::before {
-    content: 'ðŸ§¬';
+    content: '';
     position: fixed;
     top: 20%;
     right: 10%;
