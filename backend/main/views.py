@@ -26,67 +26,172 @@ try:
 except Exception as e:
     print(f"[!] Warning: Could not pre-load ML model: {e}")
 
-# ─── Shared email utility ──────────────────────────────────────────────────────
-def _send_via_resend(subject, body, recipient_email):
+# ─── Email HTML template ───────────────────────────────────────────────────────
+def _build_html_email(display_name, headline, message_lines, button_text=None, button_url=None):
+    """Build a beautiful branded HTML email for MediSkin AI."""
+    button_html = ''
+    if button_text and button_url:
+        button_html = f'''
+        <tr><td align="center" style="padding:28px 0 8px;">
+          <a href="{button_url}"
+             style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:#ffffff;
+                    text-decoration:none;padding:14px 36px;border-radius:8px;
+                    font-size:15px;font-weight:700;display:inline-block;
+                    box-shadow:0 4px 15px rgba(59,130,246,0.4);">
+            {button_text}
+          </a>
+        </td></tr>'''
+
+    body_rows = ''.join(
+        f'<tr><td style="padding:4px 0;color:#d1d5db;font-size:15px;line-height:1.7;">{line}</td></tr>'
+        for line in message_lines
+    )
+
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#0f172a;font-family:'Segoe UI',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f172a;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0"
+             style="max-width:600px;background:linear-gradient(135deg,#1a1f35,#242b42);
+                    border-radius:16px;overflow:hidden;
+                    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+                    border:1px solid rgba(59,130,246,0.3);">
+
+        <!-- Header -->
+        <tr><td style="background:linear-gradient(135deg,#1e3a8a,#3b82f6,#60a5fa);
+                        padding:40px 40px 32px;text-align:center;">
+          <div style="font-size:28px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;">
+            &#x1FA7A; MediSkin AI
+          </div>
+          <div style="color:rgba(255,255,255,0.85);font-size:13px;margin-top:6px;letter-spacing:1px;
+                       text-transform:uppercase;">AI-Powered Skin Disease Diagnosis</div>
+        </td></tr>
+
+        <!-- Body -->
+        <tr><td style="padding:40px 44px 20px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr><td style="font-size:22px;font-weight:700;color:#ffffff;padding-bottom:16px;">
+              Hi {display_name}! &#x1F44B;
+            </td></tr>
+            <tr><td style="font-size:18px;font-weight:600;color:#60a5fa;padding-bottom:20px;">
+              {headline}
+            </td></tr>
+            {body_rows}
+            {button_html}
+          </table>
+        </td></tr>
+
+        <!-- Divider -->
+        <tr><td style="padding:0 44px;">
+          <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.4),transparent);"></div>
+        </td></tr>
+
+        <!-- Features strip -->
+        <tr><td style="padding:24px 44px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center" style="color:#94a3b8;font-size:13px;padding:0 8px;">
+                &#x1F52C;<br><span style="color:#60a5fa;font-weight:600;">10 Diseases</span><br>Detected
+              </td>
+              <td align="center" style="color:#94a3b8;font-size:13px;padding:0 8px;">
+                &#x26A1;<br><span style="color:#60a5fa;font-weight:600;">Instant</span><br>Results
+              </td>
+              <td align="center" style="color:#94a3b8;font-size:13px;padding:0 8px;">
+                &#x1F512;<br><span style="color:#60a5fa;font-weight:600;">Secure</span><br>&amp; Private
+              </td>
+              <td align="center" style="color:#94a3b8;font-size:13px;padding:0 8px;">
+                &#x1F3E5;<br><span style="color:#60a5fa;font-weight:600;">Clinic</span><br>Locator
+              </td>
+            </tr>
+          </table>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="background:rgba(0,0,0,0.3);padding:24px 44px;text-align:center;
+                        border-top:1px solid rgba(59,130,246,0.15);">
+          <p style="color:#64748b;font-size:12px;margin:0;">
+            &copy; 2026 MediSkin AI &nbsp;|&nbsp;
+            <a href="https://sree8639-mediskin-ai.hf.space" style="color:#3b82f6;text-decoration:none;">Visit Platform</a>
+          </p>
+          <p style="color:#475569;font-size:11px;margin:8px 0 0;">
+            This email was sent because you signed up on MediSkin AI.
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>'''
+
+
+# ─── Shared email utility ───────────────────────────────────────────────────────
+def _send_via_brevo(subject, html_body, plain_body, recipient_email, sender_name='MediSkin AI'):
     """
-    Send email via Resend HTTP API (works on HF — no SMTP needed).
-    Requires RESEND_API_KEY env var. Returns True on success.
+    Send HTML email via Brevo (Sendinblue) API — 300 emails/day free.
+    Requires BREVO_API_KEY env var + verified sender email (BREVO_SENDER_EMAIL).
+    Works on HF Spaces (HTTPS, no SMTP needed).
     """
     import os, urllib.request, json as _json
-    api_key = os.environ.get('RESEND_API_KEY', '')
+    api_key = os.environ.get('BREVO_API_KEY', '')
     if not api_key:
         return False
+    sender_email = os.environ.get('BREVO_SENDER_EMAIL', 'anyasreekadali@gmail.com')
     try:
         payload = _json.dumps({
-            'from': 'MediSkin AI <onboarding@resend.dev>',
-            'to': [recipient_email],
+            'sender': {'name': sender_name, 'email': sender_email},
+            'to': [{'email': recipient_email}],
             'subject': subject,
-            'text': body,
+            'htmlContent': html_body,
+            'textContent': plain_body,
         }).encode('utf-8')
         req = urllib.request.Request(
-            'https://api.resend.com/emails',
+            'https://api.brevo.com/v3/smtp/email',
             data=payload,
             headers={
-                'Authorization': f'Bearer {api_key}',
+                'api-key': api_key,
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             method='POST',
         )
         with urllib.request.urlopen(req, timeout=15) as resp:
             result = _json.loads(resp.read())
-            print(f"[EMAIL/Resend] Sent '{subject}' -> {recipient_email} | id={result.get('id')}")
+            print(f"[EMAIL/Brevo] Sent '{subject}' -> {recipient_email} | msgId={result.get('messageId','?')}")
             return True
     except Exception as e:
-        print(f"[EMAIL/Resend] Failed '{subject}' -> {recipient_email}: {e}")
+        print(f"[EMAIL/Brevo] Failed '{subject}' -> {recipient_email}: {e}")
         return False
 
 
-def _send_email_safe(subject, body, recipient_email):
+def _send_email_safe(subject, body, recipient_email, display_name='User',
+                     headline='Welcome to MediSkin AI!',
+                     button_text=None, button_url=None):
     """
-    Send a plain-text email.
-    - On HF: uses Resend HTTP API (RESEND_API_KEY env var required).
-    - Locally: uses Django's configured SMTP backend.
+    Send a branded HTML email via Brevo (HF) or Django SMTP (local).
     Never raises — logs success/failure only.
     """
-    # Try Resend first (works on HF where SMTP is blocked)
-    if _send_via_resend(subject, body, recipient_email):
+    html = _build_html_email(display_name, headline,
+                              body.split('\n') if body else [],
+                              button_text, button_url)
+    # Try Brevo first (HTTPS — works on HF where SMTP is blocked)
+    if _send_via_brevo(subject, html, body, recipient_email):
         return True
     # Fallback: Django email backend (SMTP locally, console on HF)
     try:
         from django.conf import settings as _cfg
-        from django.core.mail import EmailMessage as _EM
-        msg = _EM(
-            subject=subject,
-            body=body,
-            from_email=_cfg.DEFAULT_FROM_EMAIL,
-            to=[recipient_email],
-        )
+        from django.core.mail import EmailMultiAlternatives as _EMA
+        msg = _EMA(subject=subject, body=body,
+                   from_email=_cfg.DEFAULT_FROM_EMAIL, to=[recipient_email])
+        msg.attach_alternative(html, 'text/html')
         msg.encoding = 'utf-8'
         msg.send(fail_silently=False)
         print(f"[EMAIL] Sent '{subject}' -> {recipient_email}")
         return True
     except Exception as _e:
-        print(f"[EMAIL] Failed to send '{subject}' -> {recipient_email}: {_e}")
+        print(f"[EMAIL] Failed '{subject}' -> {recipient_email}: {_e}")
         return False
 
 
@@ -256,20 +361,22 @@ def google_oauth_complete(request):
     if user.email:
         import threading
         _email_addr = user.email
+        _dname = display_name
         _body = (
-            f"Hi {display_name},\n\n"
             f"Welcome to MediSkin AI! You have successfully signed in with Google.\n\n"
             f"Account : {user.username}\n"
             f"Email   : {user.email}\n\n"
-            f"Head to your dashboard to upload a skin image and get\n"
-            f"an AI-powered skin disease diagnosis in seconds.\n\n"
-            f"Dashboard : {_site_url()}/diagnostics/\n\n"
-            f"If this wasn't you, please contact us immediately.\n\n"
-            f"-- MediSkin AI Team"
+            f"Head to your dashboard to upload a skin image and get an AI-powered diagnosis."
         )
         threading.Thread(
             target=_send_email_safe,
             args=('Welcome to MediSkin AI!', _body, _email_addr),
+            kwargs={
+                'display_name': _dname,
+                'headline': 'You\'re signed in with Google! \U0001F680',
+                'button_text': 'Go to Dashboard',
+                'button_url': f'{_site_url()}/diagnostics/',
+            },
             daemon=True,
         ).start()
         print(f"[EMAIL] Greeting queued for {user.email} on Google OAuth login")
@@ -484,18 +591,18 @@ def register_user(request):
         # Send personalised welcome email immediately after signup
         first_name = full_name.split()[0] if full_name else username
         _send_email_safe(
-            subject='Welcome to MediSkin AI!',
+            subject='Welcome to MediSkin AI — Account Created!',
             body=(
-                f"Hi {first_name},\n\n"
-                f"Welcome to MediSkin AI! Your account has been created successfully.\n\n"
+                f"Your MediSkin AI account has been created successfully.\n\n"
                 f"Username: {username}\n"
                 f"Email: {email}\n\n"
-                f"You can now log in and start using our AI-powered skin disease\n"
-                f"diagnosis platform. Upload a photo and get an instant analysis.\n\n"
-                f"Get started: {_site_url()}/login/\n\n"
-                f"-- MediSkin AI Team"
+                f"Upload a photo and get an instant AI-powered skin disease analysis."
             ),
             recipient_email=email,
+            display_name=first_name,
+            headline='Your account is ready! \U0001F389',
+            button_text='Start Diagnosis',
+            button_url=f'{_site_url()}/login/',
         )
 
         # Do not auto-login after registration - require user to login manually
@@ -563,19 +670,18 @@ def login_user(request):
                 _email_username = user.username
                 def _send_login_email():
                     _send_email_safe(
-                        subject='Welcome to MediSkin AI!',
+                        subject='Welcome Back to MediSkin AI!',
                         body=(
-                            f"Hi {_email_name},\n\n"
-                            f"Welcome to MediSkin AI! You have successfully signed in.\n\n"
+                            f"You have successfully signed in to MediSkin AI.\n\n"
                             f"Account : {_email_username}\n"
                             f"Email   : {_email_user}\n\n"
-                            f"Head to your dashboard to upload a skin image and get\n"
-                            f"an AI-powered skin disease diagnosis in seconds.\n\n"
-                            f"Dashboard : {_site_url()}/diagnostics/\n\n"
-                            f"If this wasn't you, please reset your password immediately.\n\n"
-                            f"-- MediSkin AI Team"
+                            f"Upload a skin image and get an instant AI-powered diagnosis."
                         ),
                         recipient_email=_email_user,
+                        display_name=_email_name,
+                        headline='Welcome back! \U0001F44B',
+                        button_text='Open Dashboard',
+                        button_url=f'{_site_url()}/diagnostics/',
                     )
                 threading.Thread(target=_send_login_email, daemon=True).start()
                 print(f"[EMAIL] Greeting email queued for {user.email} on login")
