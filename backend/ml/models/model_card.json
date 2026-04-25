@@ -1,7 +1,7 @@
 {
   "model_name": "MediSkin AI \u2014 Skin Disease Classifier",
   "version": "1.0",
-  "created": "2026-04-15 16:34:35",
+  "created": "2026-04-25 14:01:52",
   "framework": "TensorFlow 2.19.0",
   "architecture": {
     "base": "ResNet50 (ImageNet pretrained)",
@@ -27,10 +27,10 @@
   },
   "training": {
     "stage1": {
-      "best_val_accuracy": 0.34979838132858276
+      "best_val_accuracy": 0.39667338132858276
     },
     "stage2": {
-      "best_val_accuracy": 0.8092237710952759
+      "best_val_accuracy": 0.8142641186714172
     },
     "test": {
       "accuracy": 0.0
@@ -41,16 +41,16 @@
       "batch_size": 32,
       "total_epochs": 80
     },
-    "date": "2026-04-15 16:33:43"
+    "date": "2026-04-25 13:59:42"
   },
   "performance": {
-    "accuracy": 0.8155120481927711,
-    "precision_macro": 0.7561679578170957,
-    "recall_macro": 0.7727720600847551,
-    "f1_macro": 0.7613198599993649,
-    "precision_weighted": 0.8236236306245845,
-    "recall_weighted": 0.8155120481927711,
-    "f1_weighted": 0.8170061566090415
+    "accuracy": 0.8014558232931727,
+    "precision_macro": 0.7468232349228565,
+    "recall_macro": 0.7624739854721632,
+    "f1_macro": 0.7510679556572425,
+    "precision_weighted": 0.8124503917847228,
+    "recall_weighted": 0.8014558232931727,
+    "f1_weighted": 0.8032519945338458
   },
   "inference": {
     "preprocessing": "Resize to 224x224, divide by 255",

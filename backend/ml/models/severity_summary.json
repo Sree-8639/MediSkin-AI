@@ -1,12 +1,12 @@
 {
-  "1. Eczema 1677": 2,
-  "10. Warts Molluscum and other Viral Infections - 2103": 2,
-  "2. Melanoma 15.75k": 4,
-  "3. Atopic Dermatitis - 1.25k": 2,
-  "4. Basal Cell Carcinoma (BCC) 3323": 4,
-  "5. Melanocytic Nevi (NV) - 7970": 3,
-  "6. Benign Keratosis-like Lesions (BKL) 2624": 2,
-  "7. Psoriasis pictures Lichen Planus and related diseases - 2k": 2,
-  "8. Seborrheic Keratoses and other Benign Tumors - 1.8k": 1,
-  "9. Tinea Ringworm Candidiasis and other Fungal Infections - 1.7k": 2
+  "Eczema": 2,
+  "Warts Molluscum Viral Infections": 2,
+  "Melanoma": 4,
+  "Atopic Dermatitis": 2,
+  "Basal Cell Carcinoma (BCC)": 4,
+  "Melanocytic Nevi (NV)": 3,
+  "Benign Keratosis-like Lesions (BKL)": 2,
+  "Psoriasis Lichen Planus": 2,
+  "Seborrheic Keratoses": 1,
+  "Tinea Ringworm Fungal Infections": 2
 }
