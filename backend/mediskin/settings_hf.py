@@ -111,19 +111,33 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', f'MediSkin AI <{EMAIL_HOST_USER}>')
 
 # ─── Google OAuth ─────────────────────────────────────────────────────────────
-# Configure directly from env vars — no database SocialApp record needed.
-# This is the most reliable approach for allauth >= 0.61 on HF Spaces.
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
-            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
-            'key': '',
-        },
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
+# Only configure APP credentials when both env vars are present.
+# If missing, allauth shows a proper error instead of crashing with 500.
+_GOOGLE_CLIENT_ID     = os.environ.get('GOOGLE_CLIENT_ID', '').strip()
+_GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET', '').strip()
+
+if _GOOGLE_CLIENT_ID and _GOOGLE_CLIENT_SECRET:
+    SOCIALACCOUNT_PROVIDERS = {
+        'google': {
+            'APP': {
+                'client_id': _GOOGLE_CLIENT_ID,
+                'secret':    _GOOGLE_CLIENT_SECRET,
+                'key':       '',
+            },
+            'SCOPE':       ['profile', 'email'],
+            'AUTH_PARAMS': {'access_type': 'online'},
+        }
     }
-}
+    print(f"[settings_hf] Google OAuth: configured (client_id={_GOOGLE_CLIENT_ID[:20]}...)")
+else:
+    SOCIALACCOUNT_PROVIDERS = {
+        'google': {
+            'SCOPE':       ['profile', 'email'],
+            'AUTH_PARAMS': {'access_type': 'online'},
+        }
+    }
+    print("[settings_hf] Google OAuth: GOOGLE_CLIENT_ID/SECRET not set — button will be disabled.")
+
 SITE_ID = int(os.environ.get('SITE_ID', '1'))
 
 # ─── API Base URL ─────────────────────────────────────────────────────────────
