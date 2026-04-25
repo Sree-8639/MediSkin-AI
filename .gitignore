@@ -56,3 +56,8 @@ _inspect_output.txt
 _layers.txt
 _test_out.txt
 
+# ─── Static binary images (upload via HF web UI instead) ─────────────────────
+frontend/static/images/*.png
+frontend/static/images/*.jpg
+frontend/static/images/*.jpeg
+frontend/static/images/*.webp
