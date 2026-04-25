@@ -45,9 +45,6 @@ cd /app/backend
 # Use HF-specific settings throughout
 export DJANGO_SETTINGS_MODULE="mediskin.settings_hf"
 
-# Ensure /data directory exists for SQLite + media (HF persistent volume)
-mkdir -p /data/media
-
 echo "[*] Running migrations..."
 python manage.py migrate --noinput 2>&1
 
