@@ -1,3 +1,4 @@
+﻿@charset "UTF-8";
 /* Login Page - Dark 3D Theme */
 
 /* Login container specific dimensions */
@@ -54,7 +55,7 @@
 
 /* Randomly positioned floating medical icons */
 .login-main::after {
-    content: '⚕️';
+    content: 'âš•ï¸';
     position: absolute;
     top: 10%;
     left: 15%;
@@ -65,7 +66,7 @@
 }
 
 .login-card::before {
-    content: '🧬';
+    content: 'ðŸ§¬';
     position: fixed;
     top: 20%;
     right: 10%;

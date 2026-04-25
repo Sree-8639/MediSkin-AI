@@ -1,3 +1,4 @@
+﻿@charset "UTF-8";
 /* Diagnostics Page Styles */
 
 .diagnostics-main {
@@ -599,7 +600,7 @@
     border-bottom: none;
 }
 
-/* ── Google Maps Embed Container ─────────────────────────────────────────── */
+/* â”€â”€ Google Maps Embed Container â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .maps-embed-container {
     margin: 1.25rem 0;
     border-radius: var(--radius-lg);
@@ -640,7 +641,7 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Hospital Cards ───────────────────────────────────────────────────────── */
+/* â”€â”€ Hospital Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .hospitals-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -1003,3 +1004,4 @@
         margin-bottom: var(--spacing-lg);
     }
 }
+

@@ -1,3 +1,4 @@
+﻿@charset "UTF-8";
 /* ============================================
    MEDISKIN AI - PROFESSIONAL MEDICAL THEME
    Clean Blue & White Design System
@@ -1102,7 +1103,7 @@ main {
 }
 
 /* ============================================
-   HEADER NAV BUTTONS — uniform size on every page
+   HEADER NAV BUTTONS â€” uniform size on every page
    One rule covers login, create-account, reset-password
    ============================================ */
 .header .btn {
@@ -1117,3 +1118,4 @@ main {
   justify-content: center;
   white-space: nowrap;
 }
+
