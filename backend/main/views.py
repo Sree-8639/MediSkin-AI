@@ -213,25 +213,28 @@ def google_oauth_complete(request):
         phone = country = state = district = city = pincode = ''
         profile_complete = False
 
-    # ── Send greeting email on EVERY Google OAuth login ───────────────────────
+    # ── Send greeting email in background (non-blocking) ──────────────────────
     display_name = full_name.split()[0] if full_name else user.username
     if user.email:
-        _send_email_safe(
-            subject='Welcome to MediSkin AI!',
-            body=(
-                f"Hi {display_name},\n\n"
-                f"Welcome to MediSkin AI! You have successfully signed in with Google.\n\n"
-                f"Account : {user.username}\n"
-                f"Email   : {user.email}\n\n"
-                f"Head to your dashboard to upload a skin image and get\n"
-                f"an AI-powered skin disease diagnosis in seconds.\n\n"
-        f"Dashboard : {_site_url()}/diagnostics/\n\n"
-                f"If this wasn't you, please contact us immediately.\n\n"
-                f"-- MediSkin AI Team"
-            ),
-            recipient_email=user.email,
+        import threading
+        _email_addr = user.email
+        _body = (
+            f"Hi {display_name},\n\n"
+            f"Welcome to MediSkin AI! You have successfully signed in with Google.\n\n"
+            f"Account : {user.username}\n"
+            f"Email   : {user.email}\n\n"
+            f"Head to your dashboard to upload a skin image and get\n"
+            f"an AI-powered skin disease diagnosis in seconds.\n\n"
+            f"Dashboard : {_site_url()}/diagnostics/\n\n"
+            f"If this wasn't you, please contact us immediately.\n\n"
+            f"-- MediSkin AI Team"
         )
-        print(f"[EMAIL] Greeting sent to {user.email} on Google OAuth login")
+        threading.Thread(
+            target=_send_email_safe,
+            args=('Welcome to MediSkin AI!', _body, _email_addr),
+            daemon=True,
+        ).start()
+        print(f"[EMAIL] Greeting queued for {user.email} on Google OAuth login")
 
     user_data = {
         'username': user.username,
