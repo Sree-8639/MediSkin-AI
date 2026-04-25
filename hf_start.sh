@@ -65,6 +65,37 @@ else:
     print('  Demo user already exists.')
 "
 
+# ── 4. Setup Google OAuth (SocialApp + Site) ─────────────────────────────────
+echo "[*] Setting up Google OAuth..."
+python -c "
+import django, os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mediskin.settings_hf')
+django.setup()
+from django.contrib.sites.models import Site
+from allauth.socialaccount.models import SocialApp
+
+client_id     = os.environ.get('GOOGLE_CLIENT_ID', '')
+client_secret = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+
+# Always update/create the Site record with the correct HF domain
+site, _ = Site.objects.update_or_create(
+    id=1,
+    defaults={'domain': 'sree8639-mediskin-ai.hf.space', 'name': 'MediSkin AI'}
+)
+print(f'  Site: {site.domain}')
+
+if client_id and client_secret:
+    app, created = SocialApp.objects.update_or_create(
+        provider='google',
+        defaults={'name': 'Google', 'client_id': client_id, 'secret': client_secret}
+    )
+    if not app.sites.filter(id=site.id).exists():
+        app.sites.add(site)
+    print(f'  Google OAuth app {\"created\" if created else \"updated\"} OK.')
+else:
+    print('  GOOGLE_CLIENT_ID/SECRET not set — Google login disabled.')
+"
+
 # ── 4. Start Gunicorn ────────────────────────────────────────────────────────
 echo ""
 echo "[*] Starting Gunicorn on port 7860..."
