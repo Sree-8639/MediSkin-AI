@@ -55,7 +55,7 @@
 
 /* Randomly positioned floating medical icons */
 .login-main::after {
-    content: 'âš•ï¸';
+    content: '\2695\FE0F';
     position: absolute;
     top: 10%;
     left: 15%;
