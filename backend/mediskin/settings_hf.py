@@ -111,8 +111,15 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', f'MediSkin AI <{EMAIL_HOST_USER}>')
 
 # ─── Google OAuth ─────────────────────────────────────────────────────────────
+# Configure directly from env vars — no database SocialApp record needed.
+# This is the most reliable approach for allauth >= 0.61 on HF Spaces.
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID', ''),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET', ''),
+            'key': '',
+        },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
     }
