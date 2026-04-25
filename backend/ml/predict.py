@@ -525,28 +525,27 @@ def predict_image(image_path, model_package=None, top_k: int = 3) -> dict:
         probs = model.predict(arr, verbose=0)[0]
 
         if np.isfinite(probs).all() and len(probs) == len(class_names):
-            probs_std = float(np.std(probs))
-            if probs_std > 0.005:
-                nn_scores = {cn: float(p) for cn, p in zip(class_names, probs)}
-                use_nn = True
-                print(f"[predict.py] NN prediction std={probs_std:.4f} — using NN + pixel hybrid.")
-            else:
-                print(f"[predict.py] NN prediction std={probs_std:.4f} too low — pixel only.")
+                probs_std = float(np.std(probs))
+                if probs_std > 0.001:  # Lower threshold — trust NN even with low std
+                    nn_scores = {cn: float(p) for cn, p in zip(class_names, probs)}
+                    use_nn = True
+                    print(f"[predict.py] NN prediction std={probs_std:.4f} — using pure NN.")
+                else:
+                    print(f"[predict.py] NN std={probs_std:.4f} too flat — pixel fallback.")
         else:
             print("[predict.py] NN output invalid (NaN or wrong shape) — pixel only.")
 
     except Exception as e:
         print(f"[predict.py] NN prediction failed: {e}. Using pixel scores only.")
 
-    # ── 3. Combine scores ──────────────────────────────────────────────────────
+    # ── 3. Use pure NN output (100% trust) — pixel only as fallback ───────────
     if use_nn and nn_scores:
-        combined: dict[str, float] = {}
-        for cname in class_names:
-            nn = nn_scores.get(cname, 0.0)
-            px = px_scores.get(cname, 0.0)
-            combined[cname] = 0.70 * nn + 0.30 * px
+        # Trust the trained model fully — no pixel mixing that adds noise
+        combined: dict[str, float] = nn_scores
+        print(f"[predict.py] Using pure NN prediction (100% NN).")
     else:
         combined = px_scores
+        print(f"[predict.py] NN unavailable — using pixel fallback.")
 
     # ── 4. Normalise and rank ──────────────────────────────────────────────────
     total = sum(combined.values())
