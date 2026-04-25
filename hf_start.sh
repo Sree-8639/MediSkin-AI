@@ -96,14 +96,15 @@ else:
     print('  GOOGLE_CLIENT_ID/SECRET not set — Google login disabled.')
 "
 
-# ── 4. Start Gunicorn ────────────────────────────────────────────────────────
+# ── 5. Start Gunicorn ────────────────────────────────────────────────────────
 echo ""
 echo "[*] Starting Gunicorn on port 7860..."
 echo "══════════════════════════════════════════════════════════════"
 
 exec gunicorn mediskin.wsgi:application \
     --bind 0.0.0.0:7860 \
-    --workers 2 \
+    --workers 1 \
+    --preload \
     --timeout 300 \
     --access-logfile - \
     --error-logfile -
