@@ -27,13 +27,51 @@ except Exception as e:
     print(f"[!] Warning: Could not pre-load ML model: {e}")
 
 # ─── Shared email utility ──────────────────────────────────────────────────────
+def _send_via_resend(subject, body, recipient_email):
+    """
+    Send email via Resend HTTP API (works on HF — no SMTP needed).
+    Requires RESEND_API_KEY env var. Returns True on success.
+    """
+    import os, urllib.request, json as _json
+    api_key = os.environ.get('RESEND_API_KEY', '')
+    if not api_key:
+        return False
+    try:
+        payload = _json.dumps({
+            'from': 'MediSkin AI <onboarding@resend.dev>',
+            'to': [recipient_email],
+            'subject': subject,
+            'text': body,
+        }).encode('utf-8')
+        req = urllib.request.Request(
+            'https://api.resend.com/emails',
+            data=payload,
+            headers={
+                'Authorization': f'Bearer {api_key}',
+                'Content-Type': 'application/json',
+            },
+            method='POST',
+        )
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            result = _json.loads(resp.read())
+            print(f"[EMAIL/Resend] Sent '{subject}' -> {recipient_email} | id={result.get('id')}")
+            return True
+    except Exception as e:
+        print(f"[EMAIL/Resend] Failed '{subject}' -> {recipient_email}: {e}")
+        return False
+
+
 def _send_email_safe(subject, body, recipient_email):
     """
-    Send a plain-text email using Django's configured backend.
-    - Uses explicit utf-8 encoding to prevent Windows charmap errors.
-    - Logs success/failure but never raises, so callers are never interrupted.
-    Returns True on success, False on failure.
+    Send a plain-text email.
+    - On HF: uses Resend HTTP API (RESEND_API_KEY env var required).
+    - Locally: uses Django's configured SMTP backend.
+    Never raises — logs success/failure only.
     """
+    # Try Resend first (works on HF where SMTP is blocked)
+    if _send_via_resend(subject, body, recipient_email):
+        return True
+    # Fallback: Django email backend (SMTP locally, console on HF)
     try:
         from django.conf import settings as _cfg
         from django.core.mail import EmailMessage as _EM
