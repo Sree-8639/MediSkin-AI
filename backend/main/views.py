@@ -87,8 +87,9 @@ def _site_url():
     base = getattr(_s, 'API_BASE_URL', '') or 'http://127.0.0.1:8000'
     return base.rstrip('/')
 
+@login_required(login_url='/login/')
 def home(request):
-    """Home page view"""
+    """Home page view — requires login, prevents client-side flash redirect"""
     return render(request, 'home.html', _ctx())
 
 def login_view(request):
@@ -508,29 +509,35 @@ def login_user(request):
         if user is not None:
             login(request, user)
 
-            # ── Send greeting email on EVERY login ────────────────────────────
+            # ── Send greeting email in background (non-blocking for fast login) ─
             if user.email:
+                import threading
                 try:
                     prof = user.profile
                     display_name = prof.full_name.split()[0] if prof.full_name else user.username
                 except Exception:
                     display_name = user.username
-                _send_email_safe(
-                    subject='Welcome to MediSkin AI!',
-                    body=(
-                        f"Hi {display_name},\n\n"
-                        f"Welcome to MediSkin AI! You have successfully signed in.\n\n"
-                        f"Account : {user.username}\n"
-                        f"Email   : {user.email}\n\n"
-                        f"Head to your dashboard to upload a skin image and get\n"
-                        f"an AI-powered skin disease diagnosis in seconds.\n\n"
-                        f"Dashboard : {_site_url()}/diagnostics/\n\n"
-                        f"If this wasn't you, please reset your password immediately.\n\n"
-                        f"-- MediSkin AI Team"
-                    ),
-                    recipient_email=user.email,
-                )
-                print(f"[EMAIL] Greeting sent to {user.email} on login")
+                _email_user = user.email
+                _email_name = display_name
+                _email_username = user.username
+                def _send_login_email():
+                    _send_email_safe(
+                        subject='Welcome to MediSkin AI!',
+                        body=(
+                            f"Hi {_email_name},\n\n"
+                            f"Welcome to MediSkin AI! You have successfully signed in.\n\n"
+                            f"Account : {_email_username}\n"
+                            f"Email   : {_email_user}\n\n"
+                            f"Head to your dashboard to upload a skin image and get\n"
+                            f"an AI-powered skin disease diagnosis in seconds.\n\n"
+                            f"Dashboard : {_site_url()}/diagnostics/\n\n"
+                            f"If this wasn't you, please reset your password immediately.\n\n"
+                            f"-- MediSkin AI Team"
+                        ),
+                        recipient_email=_email_user,
+                    )
+                threading.Thread(target=_send_login_email, daemon=True).start()
+                print(f"[EMAIL] Greeting email queued for {user.email} on login")
 
             # Get profile data
             try:
