@@ -102,12 +102,10 @@ if _extra_cors:
 CORS_ALLOW_CREDENTIALS = True
 
 # ─── Email ─────────────────────────────────────────────────────────────────────
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# HF Spaces blocks outbound SMTP (port 587 — Errno 101 Network unreachable).
+# Use console backend so emails print to logs instead of timing out.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', f'MediSkin AI <{EMAIL_HOST_USER}>')
 
 # ─── Google OAuth ─────────────────────────────────────────────────────────────
