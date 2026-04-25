@@ -65,6 +65,21 @@ else:
     print('  Demo user already exists.')
 "
 
+# ── 3b. Test SMTP connectivity ────────────────────────────────────────────────
+echo "[*] Testing SMTP connectivity..."
+python -c "
+import os, socket
+host = 'smtp.gmail.com'
+port = 587
+try:
+    s = socket.create_connection((host, port), timeout=10)
+    s.close()
+    print(f'  [SMTP] Port {port} reachable on {host} — emails should work')
+except Exception as e:
+    print(f'  [SMTP] BLOCKED: Cannot reach {host}:{port} — {e}')
+    print(f'  [SMTP] Emails will NOT be sent from HF (outbound SMTP is firewalled)')
+"
+
 # ── 4. Setup Google OAuth (SocialApp + Site) ─────────────────────────────────
 echo "[*] Setting up Google OAuth..."
 python -c "
@@ -104,7 +119,10 @@ echo "════════════════════════�
 exec gunicorn mediskin.wsgi:application \
     --bind 0.0.0.0:7860 \
     --workers 1 \
+    --threads 4 \
+    --worker-class gthread \
     --preload \
-    --timeout 300 \
+    --timeout 120 \
+    --graceful-timeout 30 \
     --access-logfile - \
     --error-logfile -
