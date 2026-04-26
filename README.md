@@ -10,7 +10,7 @@ app_port: 7860
 
 <div align="center">
 
-<img src="https://sree8639-mediskin-ai.hf.space/static/images/logo.png" alt="MediSkin AI Logo" width="120" height="120">
+<img src="https://raw.githubusercontent.com/Sree-8639/MediSkin-AI/main/docs/images/logo.png" alt="MediSkin AI Logo" width="120" height="120">
 
 # 🩺 MediSkin AI
 
@@ -94,6 +94,8 @@ app_port: 7860
 | Model Architecture | Custom CNN (MobileNetV2-based), 24.7M parameters |
 | Input Resolution | 224 × 224 pixels |
 | Output Classes | 10 skin conditions |
+| Training Accuracy | **81%** |
+| Test / Inference Accuracy | **~77%** |
 | Confidence Display | Percentage score + animated bar |
 | Differential Diagnosis | Top-3 ranked predictions in a table |
 | PDF Report | Download full report (html2pdf.js + jsPDF) |
@@ -213,7 +215,7 @@ flowchart LR
 
 ## 🦠 Supported Conditions
 
-The model classifies **10 skin conditions** with an overall accuracy of **95.3%**:
+The model classifies **10 skin conditions** with a training accuracy of **81%** and test/inference accuracy of **~77%**:
 
 | # | Condition | Category |
 |---|---|---|
