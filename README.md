@@ -1,6 +1,6 @@
-﻿---
+---
 title: MediSkin AI
-emoji: \U0001FA7A
+emoji: 🩺
 colorFrom: blue
 colorTo: green
 sdk: docker
