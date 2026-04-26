@@ -10,7 +10,7 @@ app_port: 7860
 
 <div align="center">
 
-<img src="frontend/static/images/logo.png" alt="MediSkin AI Logo" width="120" height="120" style="border-radius: 50%;">
+<img src="https://sree8639-mediskin-ai.hf.space/static/images/logo.png" alt="MediSkin AI Logo" width="120" height="120">
 
 # 🩺 MediSkin AI
 
