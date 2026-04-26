@@ -15,7 +15,27 @@
 
 *Upload a skin image → Get an instant AI diagnosis → Download your PDF report*
 
+### 🌐 Live URL
+**https://sree8639-mediskin-ai.hf.space**
+
 </div>
+
+---
+
+## 🌐 Live Demo
+
+> **Deployed on Hugging Face Spaces (Docker)**
+>
+> 👉 **[https://sree8639-mediskin-ai.hf.space](https://sree8639-mediskin-ai.hf.space)**
+
+| Page | URL |
+|---|---|
+| 🏠 Home | https://sree8639-mediskin-ai.hf.space/ |
+| 🔬 Diagnostics | https://sree8639-mediskin-ai.hf.space/diagnostics/ |
+| 👤 Profile | https://sree8639-mediskin-ai.hf.space/profile/ |
+| 📄 Report Preview | https://sree8639-mediskin-ai.hf.space/pdf-demo/ |
+
+> **Demo credentials** — Username: `demo` · Password: `demo123`
 
 ---
 
