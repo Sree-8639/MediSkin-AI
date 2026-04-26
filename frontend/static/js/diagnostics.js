@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MediSkin AI â€“ Diagnostic Report</title>
+    <title>MediSkin AI — Diagnostic Report</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f8fafc; color: #0f172a; margin: 0; padding: 24px; }
         .report { max-width: 900px; margin: 0 auto; background: #ffffff; padding: 0; border-radius: 12px; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1); overflow:hidden; }
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <body>
     <div class="report">
         <div class="report-header">
-            <h1>ðŸ§¬ MediSkin AI â€“ Diagnostic Report</h1>
+            <h1>🩺 MediSkin AI — Diagnostic Report</h1>
             <p>Generated on ${new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' })}</p>
         </div>
         <div class="report-body">
