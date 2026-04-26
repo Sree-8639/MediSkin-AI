@@ -47,6 +47,12 @@ app_port: 7860
 
 > **Demo credentials** — Username: `demo` · Password: `demo123`
 
+### 🎬 Demo Video
+
+> Watch a full walkthrough of MediSkin AI in action — from image upload to PDF report download.
+>
+> 👉 **[Watch Demo on Vimeo](https://vimeo.com/reviews/367577b8-479d-40a3-9b29-7feef92c7c17/videos/1186680892)**
+
 ---
 
 ## 📋 Table of Contents
@@ -445,39 +451,6 @@ curl -X POST https://sree8639-mediskin-ai.hf.space/api/predict/ \
    https://your-space-name.hf.space/accounts/google/login/callback/
    ```
 4. Copy **Client ID** and **Client Secret** → add as HF Secrets
-
----
-
-## 📊 Required vs Unnecessary Files
-
-### ✅ Required (keep in production repo)
-
-```
-backend/          → All Django app code
-frontend/         → All templates and static assets
-Dockerfile        → Container definition
-hf_start.sh       → HF Spaces startup
-requirements.txt  → Python dependencies
-.dockerignore     → Docker build exclusions
-.gitignore        → Git exclusions
-README.md         → This file
-upload_model_to_hf.py     → Utility for model management
-download_model_locally.py → Utility for local dev
-```
-
-### ❌ Unnecessary (exclude from repo)
-
-```
-dataset/          → Training images (thousands of files, ~2GB+)
-                    → Should be stored separately or on Kaggle/HF
-backend/ml/models/*.h5
-                  → Model binary (downloaded at runtime from HF Hub)
-                    → Already in .gitignore
-venv/             → Virtual environment (already in .gitignore)
-__pycache__/      → Python bytecode (already in .gitignore)
-staticfiles/      → Collected static (generated at runtime)
-backend/.env      → Contains secrets (already in .gitignore)
-```
 
 ---
 
