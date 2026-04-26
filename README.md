@@ -1,3 +1,13 @@
+﻿---
+title: MediSkin AI
+emoji: \U0001FA7A
+colorFrom: blue
+colorTo: green
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 <div align="center">
 
 <img src="frontend/static/images/logo.png" alt="MediSkin AI Logo" width="120" height="120" style="border-radius: 50%;">
