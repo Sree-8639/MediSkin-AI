@@ -1,38 +1,41 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview & Download PDF Demo</title>
+    <meta name="description" content="MediSkin AI — Preview and download your AI skin disease diagnostic report as a PDF">
+    <title>Report Preview & Download - MediSkin AI</title>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <meta name="api-base-url" content="{{ API_BASE_URL }}">
 
     <!-- html2pdf.js via CDN – bundles jsPDF + html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         /* ── Page chrome ── */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        .pdf-page-main {
+            padding: 40px 20px 60px;
+            min-height: calc(100vh - 200px);
         }
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #0f172a;
-            color: #e2e8f0;
-            min-height: 100vh;
-            padding: 40px 20px;
-        }
-
-        h1 {
+        .pdf-page-title {
             text-align: center;
-            font-size: 2rem;
-            margin-bottom: 30px;
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
             background: linear-gradient(135deg, #60a5fa, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .pdf-page-subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9375rem;
+            margin-bottom: 32px;
         }
 
         .controls {
@@ -40,24 +43,7 @@
             gap: 16px;
             justify-content: center;
             margin-bottom: 30px;
-        }
-
-        .btn {
-            padding: 12px 32px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(0);
+            flex-wrap: wrap;
         }
 
         .btn-preview {
@@ -94,11 +80,6 @@
 
         /* ─────────────────────────────────────────────────────────
            REPORT CONTENT  (the element that gets converted to PDF)
-           ─────────────────────────────────────────────────────────
-           IMPORTANT:
-           • Use only inline-friendly CSS / no external fonts inside
-             the report section for maximum PDF fidelity.
-           • Avoid position:fixed / viewport-based units inside.
         */
         #reportContent {
             background: #ffffff;
@@ -205,17 +186,9 @@
             margin-top: 8px;
         }
 
-        #reportContent .severity-moderate {
-            background: #f59e0b;
-        }
-
-        #reportContent .severity-low {
-            background: #10b981;
-        }
-
-        #reportContent .severity-high {
-            background: #ef4444;
-        }
+        #reportContent .severity-moderate { background: #f59e0b; }
+        #reportContent .severity-low      { background: #10b981; }
+        #reportContent .severity-high     { background: #ef4444; }
 
         /* Uploaded image */
         #reportContent .image-block {
@@ -232,10 +205,7 @@
         }
 
         /* Recommendations list */
-        #reportContent ul.recs {
-            padding-left: 20px;
-        }
-
+        #reportContent ul.recs { padding-left: 20px; }
         #reportContent ul.recs li {
             margin-bottom: 6px;
             color: #334155;
@@ -257,123 +227,187 @@
             font-size: 10px;
             color: #94a3b8;
         }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .pdf-page-title { font-size: 1.4rem; }
+            .controls { flex-direction: column; align-items: stretch; padding: 0 16px; }
+            .controls .btn { text-align: center; }
+
+            #reportContent {
+                padding: 24px 20px;
+                font-size: 12px;
+            }
+
+            #reportContent .report-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+
+            #reportContent .report-header .report-meta { text-align: center; }
+
+            #reportContent .info-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            #reportContent .result-card .disease-name { font-size: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .pdf-page-main { padding: 24px 12px 40px; }
+            .preview-wrapper { border-radius: 8px; }
+        }
     </style>
 </head>
 
 <body>
-
-    <h1>🩺 MediSkin AI — Report Demo</h1>
-
-    <div class="controls">
-        <button class="btn btn-preview" onclick="showPreview()">👁 Preview Report</button>
-        <button class="btn btn-pdf" id="pdfBtn" onclick="downloadPDF()" disabled>⬇ Download PDF</button>
-    </div>
-
-    <!-- Preview wrapper -->
-    <div class="preview-wrapper" id="previewWrapper">
-
-        <!-- ╔════════════════════════════════════════════════════════╗
-             ║  #reportContent  ←  THIS is captured for the PDF     ║
-             ╚════════════════════════════════════════════════════════╝ -->
-        <div id="reportContent">
-
-            <!-- Header -->
-            <div class="report-header">
-                <div class="brand">🩺 MediSkin AI</div>
-                <div class="report-meta">
-                    <strong>Skin Disease Analysis Report</strong><br>
-                    Date: <span id="rDate"></span><br>
-                    Report ID: <span id="rId"></span>
-                </div>
-            </div>
-
-            <!-- Patient info -->
-            <h2 class="section-title">Patient Information</h2>
-            <div class="info-grid">
-                <div class="info-row">
-                    <span class="info-label">Full Name</span>
-                    <span class="info-value" id="rName">Shanmugam K.</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Age</span>
-                    <span class="info-value">28</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Location</span>
-                    <span class="info-value">Chennai, Tamil Nadu, India</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Analysis Date</span>
-                    <span class="info-value" id="rDate2"></span>
-                </div>
-            </div>
-
-            <!-- Uploaded image -->
-            <h2 class="section-title">Uploaded Skin Image</h2>
-            <div class="image-block">
-                <!--
-                    For images to appear in the PDF, they must be:
-                    (a) same-origin, or
-                    (b) base64 data URIs.
-                    Using a data URI placeholder here so the PDF always works.
-                -->
-                <img id="skinImage" src="https://placehold.co/260x220/dbeafe/1e40af?text=Skin+Sample"
-                    alt="Uploaded skin image" crossorigin="anonymous">
-            </div>
-
-            <!-- Diagnosis result -->
-            <h2 class="section-title">Diagnosis Result</h2>
-            <div class="result-card">
-                <div class="disease-name" id="rDisease">Eczema (Atopic Dermatitis)</div>
-                <div class="confidence">Confidence: <strong id="rConf">87.4%</strong></div>
-                <span class="severity-badge severity-moderate" id="rSeverity">Moderate Severity</span>
-            </div>
-
-            <!-- Top predictions -->
-            <h2 class="section-title">Top Predictions</h2>
-            <div class="info-grid">
-                <div class="info-row">
-                    <span class="info-label">#1 Prediction</span>
-                    <span class="info-value">Eczema — 87.4%</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">#2 Prediction</span>
-                    <span class="info-value">Psoriasis — 7.2%</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">#3 Prediction</span>
-                    <span class="info-value">Contact Dermatitis — 3.1%</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Model Accuracy</span>
-                    <span class="info-value">95.3%</span>
-                </div>
-            </div>
-
-            <!-- Recommendations -->
-            <h2 class="section-title">Recommendations</h2>
-            <ul class="recs">
-                <li>Consult a licensed dermatologist for a formal diagnosis and treatment plan.</li>
-                <li>Avoid known irritants and allergens that may aggravate eczema.</li>
-                <li>Apply fragrance-free moisturiser at least twice daily.</li>
-                <li>Use mild, non-soap cleansers; avoid hot water on affected areas.</li>
-                <li>Wear soft, breathable fabric (e.g. 100% cotton) to reduce friction.</li>
-            </ul>
-
-            <!-- Disclaimer -->
-            <div class="disclaimer">
-                ⚠ <strong>Disclaimer:</strong> This report is generated by an AI-based system and is intended for
-                informational purposes only. It does not constitute a medical diagnosis or replace professional
-                medical advice. Always consult a qualified dermatologist before starting any treatment.
-            </div>
-
-            <div class="report-footer">© 2026 MediSkin AI · All rights reserved</div>
+    <!-- Site Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="MediSkin AI" class="logo-image">
+                <span>MediSkin AI</span>
+            </a>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"
+                aria-controls="primaryNav" data-nav-toggle>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <nav class="nav-menu" id="primaryNav" data-nav-menu>
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'diagnostics' %}" class="nav-link">Diagnostics</a>
+                <a href="{% url 'profile' %}" class="nav-link">Profile</a>
+                <button class="btn btn-outline btn-sm" id="logoutBtn">Logout</button>
+            </nav>
         </div>
-        <!-- end #reportContent -->
+    </header>
 
-    </div>
-    <!-- end .preview-wrapper -->
+    <!-- Main Content -->
+    <main class="pdf-page-main">
+        <div class="container container-sm">
+            <h1 class="pdf-page-title">&#x1FA7A; Diagnostic Report</h1>
+            <p class="pdf-page-subtitle">Preview or download your AI skin analysis report as a PDF</p>
 
+            <div class="controls">
+                <button class="btn btn-preview" onclick="showPreview()">&#x1F441; Preview Report</button>
+                <button class="btn btn-pdf" id="pdfBtn" onclick="downloadPDF()" disabled>&#x2B07; Download PDF</button>
+            </div>
+
+            <!-- Preview wrapper -->
+            <div class="preview-wrapper" id="previewWrapper">
+                <div id="reportContent">
+
+                    <!-- Header -->
+                    <div class="report-header">
+                        <div class="brand">&#x1FA7A; MediSkin AI</div>
+                        <div class="report-meta">
+                            <strong>Skin Disease Analysis Report</strong><br>
+                            Date: <span id="rDate"></span><br>
+                            Report ID: <span id="rId"></span>
+                        </div>
+                    </div>
+
+                    <!-- Patient info -->
+                    <h2 class="section-title">Patient Information</h2>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">Full Name</span>
+                            <span class="info-value" id="rName">Shanmugam K.</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Age</span>
+                            <span class="info-value">28</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">Chennai, Tamil Nadu, India</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Analysis Date</span>
+                            <span class="info-value" id="rDate2"></span>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded image -->
+                    <h2 class="section-title">Uploaded Skin Image</h2>
+                    <div class="image-block">
+                        <img id="skinImage" src="https://placehold.co/260x220/dbeafe/1e40af?text=Skin+Sample"
+                            alt="Uploaded skin image" crossorigin="anonymous">
+                    </div>
+
+                    <!-- Diagnosis result -->
+                    <h2 class="section-title">Diagnosis Result</h2>
+                    <div class="result-card">
+                        <div class="disease-name" id="rDisease">Eczema (Atopic Dermatitis)</div>
+                        <div class="confidence">Confidence: <strong id="rConf">87.4%</strong></div>
+                        <span class="severity-badge severity-moderate" id="rSeverity">Moderate Severity</span>
+                    </div>
+
+                    <!-- Top predictions -->
+                    <h2 class="section-title">Top Predictions</h2>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">#1 Prediction</span>
+                            <span class="info-value">Eczema — 87.4%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">#2 Prediction</span>
+                            <span class="info-value">Psoriasis — 7.2%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">#3 Prediction</span>
+                            <span class="info-value">Contact Dermatitis — 3.1%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Model Accuracy</span>
+                            <span class="info-value">95.3%</span>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <h2 class="section-title">Recommendations</h2>
+                    <ul class="recs">
+                        <li>Consult a licensed dermatologist for a formal diagnosis and treatment plan.</li>
+                        <li>Avoid known irritants and allergens that may aggravate eczema.</li>
+                        <li>Apply fragrance-free moisturiser at least twice daily.</li>
+                        <li>Use mild, non-soap cleansers; avoid hot water on affected areas.</li>
+                        <li>Wear soft, breathable fabric (e.g. 100% cotton) to reduce friction.</li>
+                    </ul>
+
+                    <!-- Disclaimer -->
+                    <div class="disclaimer">
+                        &#x26A0; <strong>Disclaimer:</strong> This report is generated by an AI-based system and is intended for
+                        informational purposes only. It does not constitute a medical diagnosis or replace professional
+                        medical advice. Always consult a qualified dermatologist before starting any treatment.
+                    </div>
+
+                    <div class="report-footer">&#xA9; 2026 MediSkin AI &middot; All rights reserved</div>
+                </div>
+                <!-- end #reportContent -->
+            </div>
+            <!-- end .preview-wrapper -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">About Us</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Contact</a>
+            </div>
+            <p class="footer-text">&copy; 2026 MediSkin AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/config.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
     <script>
         /* ── Populate dynamic fields ── */
         const now = new Date();
@@ -389,56 +423,35 @@
             const wrapper = document.getElementById('previewWrapper');
             wrapper.classList.add('visible');
             document.getElementById('pdfBtn').disabled = false;
-
-            // Scroll to preview
             wrapper.scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* ── Download PDF ──
-           Key settings that prevent blank pages:
-           • html2canvas useCORS: true        → loads cross-origin images
-           • html2canvas allowTaint: false     → safer with mixed content
-           • html2canvas scale: 2             → crisp text, not blurry
-           • html2pdf pagebreak.mode 'avoid-all' → prevents mid-element page cuts
-        */
+        /* ── Download PDF ── */
         async function downloadPDF() {
             const btn = document.getElementById('pdfBtn');
             btn.disabled = true;
             btn.textContent = '⏳ Generating…';
 
             const element = document.getElementById('reportContent');
-
-            // Wait for all images inside the element to fully load
             const images = [...element.querySelectorAll('img')];
             await Promise.all(images.map(img => {
                 if (img.complete) return Promise.resolve();
-                return new Promise(resolve => {
-                    img.onload = resolve;
-                    img.onerror = resolve;   // don't block on error
-                });
+                return new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
             }));
 
             const opt = {
-                margin: [10, 10, 10, 10],   // top, left, bottom, right (mm)
+                margin: [10, 10, 10, 10],
                 filename: 'MediSkin_AI_Report.pdf',
                 image: { type: 'jpeg', quality: 0.97 },
                 html2canvas: {
-                    scale: 2,              // 2× for sharp text
-                    useCORS: true,           // allow cross-origin images
+                    scale: 2,
+                    useCORS: true,
                     allowTaint: false,
                     logging: false,
-                    /* Tell html2canvas the element's exact pixel width so
-                       it renders the full content, not just the viewport slice */
                     windowWidth: element.scrollWidth
                 },
-                jsPDF: {
-                    unit: 'mm',
-                    format: 'a4',
-                    orientation: 'portrait'
-                },
-                pagebreak: {
-                    mode: ['avoid-all', 'css', 'legacy']
-                }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             try {
@@ -452,6 +465,6 @@
             }
         }
     </script>
-</body>
+<script src="{% static 'js/logo.js' %}"></script></body>
 
 </html>
