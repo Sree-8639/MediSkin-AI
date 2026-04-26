@@ -158,45 +158,55 @@ app_port: 7860
 
 ## 🏗 Architecture
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                    HUGGING FACE SPACES                       │
-│                   (Docker Container)                         │
-│                                                              │
-│  ┌─────────────┐    ┌──────────────┐    ┌────────────────┐  │
-│  │   Browser   │───▶│   Gunicorn   │───▶│  Django App    │  │
-│  │ HTML/CSS/JS │    │  (gthread)   │    │                │  │
-│  └─────────────┘    │  4 threads   │    │  ┌──────────┐  │  │
-│                     └──────────────┘    │  │  Views   │  │  │
-│                                         │  └────┬─────┘  │  │
-│  ┌─────────────────────────────────┐    │       │         │  │
-│  │       Static Files              │    │  ┌────▼─────┐  │  │
-│  │  WhiteNoise → /staticfiles/     │    │  │  ML      │  │  │
-│  │  (CSS, JS, images, logo.js)     │    │  │  Model   │  │  │
-│  └─────────────────────────────────┘    │  │  (pre-   │  │  │
-│                                         │  │  loaded) │  │  │
-│  ┌─────────────────────────────────┐    │  └──────────┘  │  │
-│  │     HF Hub Model Storage        │───▶│                │  │
-│  │  sree8639/skin-disease-model    │    │  ┌──────────┐  │  │
-│  └─────────────────────────────────┘    │  │  SQLite  │  │  │
-│                                         │  │    DB    │  │  │
-│  ┌─────────────────────────────────┐    │  └──────────┘  │  │
-│  │    External APIs                │    └────────────────┘  │
-│  │  • Google OAuth (allauth)       │                        │
-│  │  • Brevo Email API              │                        │
-│  └─────────────────────────────────┘                        │
-└──────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph HF["☁️ Hugging Face Spaces — Docker Container"]
+        direction TB
+
+        subgraph Client["Client Layer"]
+            B["🌐 Browser\nHTML / CSS / JS"]
+        end
+
+        subgraph Server["Server Layer"]
+            G["⚙️ Gunicorn\ngthread · 4 threads"]
+            D["🐍 Django App"]
+            V["📋 Views & URLs"]
+            ML["🤖 ML Model\nTensorFlow · pre-loaded"]
+            DB["🗄️ SQLite DB"]
+        end
+
+        subgraph Static["Static Assets"]
+            WN["📦 WhiteNoise\n/staticfiles/"]
+        end
+
+        subgraph External["External Services"]
+            HFH["🤗 HF Hub\nskin-disease-model"]
+            GO["🔑 Google OAuth\ndjango-allauth"]
+            BR["📧 Brevo API\nEmail Delivery"]
+        end
+
+        B -->|HTTP Request| G
+        G --> D
+        D --> V
+        V --> ML
+        V --> DB
+        WN -->|CSS · JS · Images| B
+        HFH -->|Download at startup| ML
+        GO <-->|OAuth 2.0| D
+        BR <-->|HTTP Email| D
+    end
 ```
 
-### Request Flow
-```
-User Upload → Pillow Validation → ML Model Inference → JSON Response
-                                       ↓
-                              Top-10 class probabilities
-                                       ↓
-                          Severity classification + Recommendations
-                                       ↓
-                         Display results + Enable PDF download
+### 🔄 Request Flow
+
+```mermaid
+flowchart LR
+    A["📸 User Uploads\nSkin Image"] --> B["✅ Pillow\nValidation"]
+    B --> C["🤖 ML Model\nInference"]
+    C --> D["📊 Top-10 Class\nProbabilities"]
+    D --> E["⚠️ Severity\nClassification"]
+    E --> F["💡 Recommendations\nGenerated"]
+    F --> G["📄 Display Results\n+ PDF Download"]
 ```
 
 ---
